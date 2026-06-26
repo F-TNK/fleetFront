@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="https://www.thymeleaf.org">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        
+        <!-- ---- HEADER ---- -->
+        <header th:fragment="custom-header">
+            <nav class="d-flex justify-content-between p-3 bg-secondary">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" aria-current="page" th:href="@{/}">Fleet</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" aria-current="page" th:href="@{/login}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" aria-current="page" th:href="@{/registrar}">Cadastro</a>
+                    </li>
+                </ul>
+                <a th:href="@{/login}">
+                    <button class="btn btn-danger">
+                        Sair
+                    </button>
+                </a>
+            </nav>
+        </header>
+        
+        
+    </body>
+</html>
