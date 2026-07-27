@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layoutAdmin :: base(~{::main})}">
+    <head>
+        <title>Liberações</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+        <main class="py-4">
+
+            <!---------------------- TABELA ALERTA ---------------------->
+            <div class="card shadow-sm p-4 mb-4 border-danger">
+                <h3 class="mb-4 fw-bold text-danger">Liberações Com Ocorrência</h3>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Operador</th>
+                                <th scope="col">Equipamento</th>
+                                <th scope="col">Data/Hora de Retirada</th>
+                                <th scope="col">Data/Hora de Devolução</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="l : ${alerta}">
+                                <td class="fw-bold" th:text="${l.id}">1</td>
+                                <td th:text="${l.nomeOp}">Nome do Operador</td>
+                                <td th:text="${l.nomeEquip}">Nome do Equipamento</td>
+                                <td th:text="${l.dataHoraRetirada}">01/01/2000 00:00</td>
+                                <td th:text="${l.dataHoraDevolucao}">01/01/2000 00:00</td>
+                                
+                                <td>
+                                    <button class="badge bg-secondary text-light border-0 px-2 py-1 fw-bold"
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="'#modalInfoLiberacao' + ${l.id}">
+                                        INFO
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(alerta)}">
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    Nenhuma liberação com ocorrência
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!---------------------- JANELA OCULTA 1 ---------------------->
+            <th:block th:each="l : ${alerta}">
+                <div class="modal fade" th:id="'modalInfoLiberacao' + ${l.id}" tabindex="-1" aria-hidden="true">
+                    <!-- max-width 800px -->
+                    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 800px;">
+                        <div class="modal-content">
+                            
+                            <div class="modal-header text-white bg-danger">
+                                <h5 class="modal-title fw-bold">Informações da Ocorrência</h5>
+                                <button type="button" class="btn-close btn-close-white" 
+                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body row g-3 text-start">
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Operador:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.nomeOp}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Equipamento:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.nomeEquip}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-muted">Retirada (Agendada):</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.dataHoraRetirada}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-muted">Devolução (Agendada):</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.dataHoraDevolucao}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-primary">Retirada (Real):</label>
+                                    <input type="text" class="form-control bg-light border-primary" th:value="${l.dataHoraRetiradaReal}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-primary">Devolução (Real):</label>
+                                    <input type="text" class="form-control bg-light border-primary" th:value="${l.dataHoraDevolucaoReal}" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Hor. Inicial:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.horimetroInicial}" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Hor. Final:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.horimetroFinal}" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Comb. Inicial:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.combustivelInicial + '%'}" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Comb. Final:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.combustivelFinal + '%'}" readonly>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Local de Uso:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.localUso}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Observações de Retirada:</label>
+                                    <textarea class="form-control bg-light" rows="3" th:text="${l.observacoesRetirada}" readonly></textarea>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-danger">Observações de Devolução (Problema):</label>
+                                    <textarea class="form-control bg-light border-danger" rows="3" th:text="${l.observacoesDevolucao}" readonly></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Botoes -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary me-auto" 
+                                        data-bs-dismiss="modal">
+                                    Fechar
+                                </button>
+                                <!-- BOTAO DE CONCLUIR OCORRENCIA -->
+                                <a th:href="@{/admin/liberacao/resolve/{id}(id=${l.id})}" 
+                                   class="btn btn-outline-success fw-semibold"
+                                   onclick="return confirm(
+                                               'Deseja finalizar essa liberação? Essa ação não poderá ser desfeita')">
+                                    Concluir Ocorrência
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+            
+            <!------------------------ BOTAO + ------------------------>
+            <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+                <h3 class="mb-4 fw-bold"></h3>
+                <button class="btn btn-success" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#formCadastroLiberacao"
+                        aria-expanded="false" aria-controls="formCadastroLiberacao">
+                    + Nova Liberação
+                </button>
+            </div>
+
+            <!---------------------- ADD LIBERACAO ---------------------->
+            <div class="collapse mb-4" id="formCadastroLiberacao">
+                <div class="card card-body bg-light border">
+                    <h5 class="card-title mb-3">Registrar Nova Liberação</h5>
+
+                    <!-- Chama rota de save do LiberacaoController -->
+                    <form th:action="@{/admin/liberacao/save}" th:object="${liberacao}" method="POST" class="row g-3">
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">ID do Operador:</label>
+                            <input type="number" th:field="*{idOperador}" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">ID do Equipamento:</label>
+                            <input type="number" th:field="*{idEquip}" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Data/Hora Retirada:</label>
+                            <input type="datetime-local" th:field="*{dataHoraRetirada}" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Data/Hora Devolução:</label>
+                            <input type="datetime-local" th:field="*{dataHoraDevolucao}" class="form-control" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Local de Uso:</label>
+                            <input type="text" th:field="*{localUso}" class="form-control" required>
+                        </div>
+
+                        <div class="col-12 text-end mt-3">
+                            <button type="submit" class="btn btn-outline-primary px-4">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!---------------------- TABELA OPEN ---------------------->
+            <div class="card shadow-sm p-4 mb-4">
+                <h3 class="mb-4 fw-bold" style="color: #0e7490;">Liberações Abertas</h3>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Operador</th>
+                                <th scope="col">Equipamento</th>
+                                <th scope="col">Data/Hora de Retirada</th>
+                                <th scope="col">Data/Hora de Devolução</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="l : ${open}">
+                                <td class="fw-bold" th:text="${l.id}">1</td>
+                                <td th:text="${l.nomeOp}">Nome do Operador</td>
+                                <td th:text="${l.nomeEquip}">Nome do Equipamento</td>
+                                <td th:text="${l.dataHoraRetirada}">01/01/2000 00:00</td>
+                                <td th:text="${l.dataHoraDevolucao}">01/01/2000 00:00</td>
+                                
+                                <td>
+                                    <button class="badge bg-secondary text-white border-0 px-2 py-1"
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="'#modalEditLiberacao' + ${l.id}">
+                                        Editar
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(open)}">
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    Nenhuma liberação em aberto
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!---------------------- JANELA OCULTA 2 ---------------------->
+            <th:block th:each="l : ${open}">
+                <div class="modal fade" th:id="'modalEditLiberacao' + ${l.id}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" style="max-width: 650px;">
+                        <div class="modal-content">
+
+                            <div class="modal-header text-white" style="background-color: #0e7490;">
+                                <h5 class="modal-title fw-bold">Editar Liberação</h5>
+                                <button type="button" class="btn-close btn-close-white" 
+                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <form th:action="@{/admin/liberacao/edit}" method="POST">
+                                <div class="modal-body row g-3 text-start">
+
+                                    <!-- ID OCULTO -->
+                                    <input type="hidden" name="id" th:value="${l.id}">
+                                    <!-- IDs de vinculo -->
+                                    <input type="hidden" name="idOperador" th:value="${l.idOperador}">
+                                    <input type="hidden" name="idEquip" th:value="${l.idEquip}">
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Operador:</label>
+                                        <input type="text" name="nomeOp" th:value="${l.nomeOp}" 
+                                               class="form-control" readonly>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Equipamento:</label>
+                                        <input type="text" name="nomeEquip" th:value="${l.nomeEquip}" 
+                                               class="form-control" readonly>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Data/Hora Retirada:</label>
+                                        <input type="datetime-local" name="dataHoraRetirada" th:value="${l.dataHoraRetirada}" 
+                                               class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Data/Hora Devolução:</label>
+                                        <input type="datetime-local" name="dataHoraDevolucao" th:value="${l.dataHoraDevolucao}" 
+                                               class="form-control" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold">Local de Uso:</label>
+                                        <input type="text" name="localUso" th:value="${l.localUso}" 
+                                               class="form-control" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold">Observações (Retirada):</label>
+                                        <textarea name="observacoesRetirada" class="form-control" rows="2" th:text="${l.observacoesRetirada}"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <a th:href="@{/admin/liberacao/delete/{id}(id=${l.id})}" 
+                                       class="btn btn-danger me-auto"
+                                       onclick="return confirm(
+                                                   'ATENÇÃO: Deseja realmente excluir esta liberação?\nEssa ação não pode ser desfeita.')">
+                                        Excluir
+                                    </a>
+
+                                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" class="btn btn-warning text-dark fw-semibold"
+                                            onclick="return confirm(
+                                                        'Deseja realmente salvar as alterações?')">
+                                        Salvar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+        </main>
+    </body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+
+        <div th:fragment="cardEquip(e)" class="card shadow-sm h-100">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h5 class="card-title mb-0 fw-bold" th:text="${e.nome}">Nome Equipamento</h5>
+                            <small class="text-muted" th:text="'Modelo: ' + ${e.modelo}">Modelo</small>
+                        </div>
+
+                        <!-------------------- BALAO FLUTUANTE -------------------->
+                        <span class="badge bg-secondary text-light cursor-pointer"
+                              data-bs-toggle="tooltip"
+                              data-bs-html="true"
+                              th:attr="data-bs-title=
+                                '<b>Data Aquisição:</b> ' + ${e.dataAquisicao}
+                                + '<br><b>Horas de Uso:</b> ' + ${e.horasUso} + 'h'
+                                + '<br><b>Vida Útil:</b> ' + ${e.vidaUtil} + 'h'">
+                            INFO
+                        </span>
+<!--                        <span class="badge bg-secondary text-light cursor-pointer"
+                              data-bs-toggle="tooltip"
+                              data-bs-html="true"
+                              th:attr="data-bs-title=
+                                '<b>Status:</b> ' + ${e.status} 
+                                + '<br><b>Data Aquisição:</b> ' + ${e.dataAquisicao} 
+                                + '<br><b>Combustível:</b> ' + ${e.nivelCombustivel} + '%'
+                                + '<br><b>Horas de Uso:</b> ' + ${e.horasUso} + 'h'
+                                + '<br><b>Vida Útil:</b> ' + ${e.vidaUtil} + 'h'">
+                            INFO
+                        </span>-->
+                    </div>
+
+
+                    <!---------------------- PORCENT ---------------------->
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <small class="fw-semibold text-secondary">Vida Útil</small>
+                            <small class="fw-bold" th:text="${#numbers.formatDecimal
+                                   (e.porcentUso(), 1, 1)} + '%'"></small>
+                        </div>
+
+                        <div class="progress" style="height: 12px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                 role="progressbar"
+                                 th:style="'width: ' + ${e.porcentUso()} + '%'"
+                                 th:classappend="${
+                                    e.porcentUso() > 80 ? ' bg-danger' :
+                                    (e.porcentUso() > 50 ? ' bg-warning' : ' bg-success')
+                                 }">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <small class="fw-semibold text-secondary">Combustível</small>
+                            <small class="fw-bold" th:text="${#numbers.formatDecimal
+                                   (e.nivelCombustivel, 1, 1)} + '%'"></small>
+                        </div>
+
+                        <div class="progress" style="height: 12px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                 role="progressbar"
+                                 th:style="'width: ' + ${e.nivelCombustivel} + '%'"
+                                 th:classappend="${
+                                    e.nivelCombustivel < 20 ? ' bg-danger' :
+                                    (e.nivelCombustivel < 50 ? ' bg-warning' : ' bg-success')
+                                 }">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!------------------------ ACOES ------------------------>
+                <div class="d-flex justify-content-between align-items-center mt-4 pt-2 border-top">
+                    
+                    <span class="badge"
+                          th:classappend="${e.status == 'Disponível' ? 'bg-success' : 
+                                         (e.status == 'Em Uso' ? 'bg-warning text-dark' : 
+                                         'bg-danger')}"
+                          th:text="${e.status}">
+                        Status
+                    </span>
+
+                    <!-- BOTOES DE ACAO (Direita) -->
+                    <div class="d-flex gap-2">
+                        <!-- EDITAR -->
+                        <button class="btn btn-outline-secondary btn-sm"
+                                type="button"
+                                data-bs-toggle="modal"
+                                th:data-bs-target="'#modalEditarEquip' + ${e.idEquip}">
+                            Editar
+                        </button>
+                    </div>
+                </div>
+
+            <!---------------------- JANELA EDICAO ---------------------->
+            <div class="modal fade" th:id="'modalEditarEquip' + ${e.idEquip}" 
+                 tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <!-- class="modal" do Bootstrap, criando uma janela oculta ate ser ativada -->
+                        <!-- Permite uma funcao oculta da pagina ate ser ativada -->
+                        
+                        <div class="modal-header text-white" style="background-color: #0e7490;">
+                            <h5 class="modal-title fw-bold">Editar Equipamento</h5>
+                            <button type="button" class="btn-close btn-close-white" 
+                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <form th:action="@{/admin/equip/editar}" method="POST">
+                            <div class="modal-body row g-3 text-start">
+
+                                <!-- ID OCULTO para definir Equip -->
+                                <input type="hidden" name="idEquip" th:value="${e.idEquip}">
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Nome:</label>
+                                    <input type="text" name="nome" 
+                                           th:value="${e.nome}" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Modelo:</label>
+                                    <input type="text" name="modelo" 
+                                           th:value="${e.modelo}" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Data de Aquisição:</label>
+                                    <input type="date" name="dataAquisicao" 
+                                           th:value="${e.dataAquisicao}" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Horas de Uso:</label>
+                                    <input type="number" step="0.1" name="horasUso" 
+                                           th:value="${e.horasUso}" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Vida Útil (Horas):</label>
+                                    <input type="number" step="0.1" name="vidaUtil" 
+                                           th:value="${e.vidaUtil}" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Nível de Combustível (% aprox.):</label>
+                                    <input type="number" step="1" max="100" min="0" name="nivelCombustivel" 
+                                           th:value="${e.nivelCombustivel}" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Status:</label>
+                                    <select name="status" class="form-select" required>
+                                        <!-- <select> que cria a lista Dropdown, populada com <option> -->
+                                        <option value="Disponível" 
+                                                th:selected="${e.status == 'Disponível'}">Disponível</option>
+                                        <option value="Em Uso" 
+                                                th:selected="${e.status == 'Em Uso'}">Em Uso</option>
+                                        <option value="Em Manutenção" 
+                                                th:selected="${e.status == 'Em Manutenção'}">Em Manutenção</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Botoes -->
+                            <div class="modal-footer d-flex justify-content-between w-100">
+                                <a th:href="@{/admin/equip/delete/{id}(id=${e.idEquip})}"
+                                   class="btn btn-outline-danger"
+                                   onclick="return confirm
+                                       ('Deseja realmente excluir este equipamento?\nEssa ação não pode ser desfeita.')">
+                                    Excluir Equipamento
+                                </a>
+                                
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-outline-secondary" 
+                                            data-bs-dismiss="modal">Cancelar</button>
+                                    
+                                    <button type="submit" class="btn btn-warning text-dark fw-semibold"
+                                            onclick="return confirm
+                                                ('Deseja realmente salvar as alterações?')">
+                                        Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </body>
+</html>

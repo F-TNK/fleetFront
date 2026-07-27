@@ -97,4 +97,10 @@ public class EquipDTO {
         this.status = status;
     }
     
+    
+    // ----- FUNC -----
+    public Double porcentUso(){
+        Double porc = (horasUso / vidaUtil * 100);
+        return porc;
+    }
 }

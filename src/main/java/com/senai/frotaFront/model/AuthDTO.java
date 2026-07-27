@@ -13,7 +13,6 @@ public class AuthDTO {
     private String nome;
     private String email;
     private String senha;
-    private String confirmSenha;
     private String cargo;
 
     public AuthDTO() {
@@ -23,7 +22,6 @@ public class AuthDTO {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.confirmSenha = confirmSenha;
         this.cargo = cargo;
     }
     
@@ -50,14 +48,6 @@ public class AuthDTO {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public String getConfirmSenha() {
-        return confirmSenha;
-    }
-
-    public void setConfirmSenha(String confirmSenha) {
-        this.confirmSenha = confirmSenha;
     }
 
     public String getCargo() {

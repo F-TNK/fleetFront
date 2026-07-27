@@ -5,10 +5,12 @@
 package com.senai.frotaFront.controller;
 
 import com.senai.frotaFront.model.AuthDTO;
+import com.senai.frotaFront.model.LoginResponseDTO;
 import com.senai.frotaFront.model.UserDTO;
 import com.senai.frotaFront.service.ApiService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  *
  * @author Micro
  */
+@Controller
 public class UserController {
     
     // Injeção do serviço de autenticação para delegar a lógica de login.    
@@ -28,12 +31,19 @@ public class UserController {
     // Retorna o nome da view Thymeleaf "index".
     @GetMapping("/")
     public String home(HttpSession session) {
-        Object token = session.getAttribute("token");
+        String token = (String) session.getAttribute("token");
+        String role = (String) session.getAttribute("role");
         
+        // Para nao logado
         if(token == null) {
             return "redirect:/login";
         }
-        return "index";
+        // Para Admin
+        if ("administrador".equalsIgnoreCase(role)) {
+            return "redirect:/admin";
+        }
+        // Para Operador
+        return "redirect:/op";
     }
 
     // Tratador para requisições GET em "/login".
@@ -48,17 +58,40 @@ public class UserController {
     // Tratador para requisições POST em "/logar".
     // Recebe as credenciais submetidas pelo formulário e tenta autenticar.
     @PostMapping("/logar")
-    public String logar(@ModelAttribute AuthDTO credenciais, HttpSession session) {
+    public String logar(@ModelAttribute AuthDTO credenciais, HttpSession session, Model model) {
         // Chama o serviço de autenticação para obter um token JWT ou similar.
-        String token = restService.logar(credenciais);
-        // Armazena o token na sessão HTTP para uso posterior.
         
-        String role = (String) session.getAttribute("role");
-        System.out.println("token: " + token);
-        session.setAttribute("token", token);
-        // Redireciona de volta para a página inicial após login bem sucedido.
-        session.setAttribute("role", role);
-        return "redirect:/editais";
+        try {
+            LoginResponseDTO l = restService.logar(credenciais);
+            // Armazena nome, role e token na sessão HTTP para uso posterior.
+
+            // Salva atributos para a sessao com os metodos .get do LoginResponseDTO
+            session.setAttribute("token", l.getToken());
+            session.setAttribute("role", l.getCargo());
+            session.setAttribute("nome", l.getNome());
+            session.setAttribute("id", l.getId());
+            
+            // REDIRECIONAMENTO POR CARGO
+            if ("administrador".equalsIgnoreCase(l.getCargo())) {
+                return "redirect:/admin";
+            } else {
+                return "redirect:/op";
+            }
+            
+        } catch (Exception e) {
+            model.addAttribute("erro", "E-mail ou senha incorretos.");
+            model.addAttribute("credenciais", credenciais);
+            return "login";
+        }
+    }
+    
+    // Pagina para Operadores
+    @GetMapping("/home")
+    public String userHome(HttpSession session) {
+        if (session.getAttribute("token") == null) {
+            return "redirect:/login";
+        }
+        return "index"; // ou a página home do operador
     }
     
     @GetMapping("/logout")
@@ -67,24 +100,25 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @GetMapping("/registrar")
-    public String registrar(Model model) {
+    @GetMapping("/register")
+    public String register(Model model) {
         UserDTO newUser = new UserDTO();
         model.addAttribute("user", newUser);
-        return "registrar";
+        return "register";
     }
 
-    @PostMapping("/registrar")
-    public String mandarRegistro(@ModelAttribute AuthDTO user, Model model) {
+    @PostMapping("/register")
+    public String sendRegister(@ModelAttribute UserDTO user, Model model) {
         
         // Gera erro para o front-end, retornando na mesma pagina com mensagem 
+        // Evita ir para o Service para verificacao para voltar aqui e ser redirecionado
         if (!user.getSenha().equals(user.getConfirmSenha())) {
             model.addAttribute("erro", "As senhas não estão iguais");
             model.addAttribute("user", user);
-            return "registrar";
+            return "register";
         }
         
-        restService.registrar(user);
+        restService.register(user);
         return "redirect:/login";
     }
 }

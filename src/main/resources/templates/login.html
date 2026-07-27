@@ -5,23 +5,52 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: base(~{::main})}">
     <head>
-        <title>TODO supply a title</title>
+        <title>Login</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}" rel="stylesheet">
-        
     </head>
+    
     <body>
-        <main class="d-flex justify-content-center align-items-center" style="height: 80%">
+        
+        <main class="d-flex justify-content-center align-items-center w-100" style="min-height: 80vh;">
+            <div class="card shadow border-0 w-100" style="max-width: 500px; border-radius: 40px; overflow: hidden;">
             
-            <div class="card shadow border-0" style="width: 35rem; border-radius: 40px;">
-                <div class="card-header bg-info text-white text-center" style="border-radius: 40px 40px 0 0;">
+                <!-- HEADER -->
+                <div class="card-header text-white text-center py-3" style="background-color: #0e7490;">
                     <h2 class="mb-0">LOGIN</h2>
                 </div>
-                
+                <div class="card-body p-4">
+
+                    <!------------------- Mensagem de erro ------------------->
+                    <div th:if="${erro}" class="alert alert-danger" role="alert">
+                       <span th:text="${erro}"></span>
+                    </div>
+
+                    <!------------------------- CARD ------------------------->
+                    <form th:action="@{/logar}" method="post">
+
+                        <div class="mx-auto" style="max-width: 250px;">
+                            <div class="mb-3">
+                                <label class="form-label">E-mail:</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Senha:</label>
+                                <input type="password" name="senha" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-outline-primary btn-lg px-5 rounded-pill shadow-sm">Entrar</button>
+                            <div class="text-center mt-3">
+                                <a th:href="@{/register}" class="text-decoration-none">Não tem uma conta? Cadastre-se</a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
             </div>
-            
-            
         </main>
     </body>
 </html>

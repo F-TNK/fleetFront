@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layoutAdmin :: base(~{::main})}">
+    <head>
+        <title>Painel Administrativo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+        <main class="py-4">
+
+            <!---------------------- TABELA USER ---------------------->
+            <div class="card shadow-sm p-4 mb-4">
+<!--                <h3 class="mb-4 text-dark fw-bold">Funcionários</h3>-->
+                <h3 class="mb-4 fw-bold" style="color: #0e7490;">Funcionários</h3>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle mb-0">
+                        <thead class="table-dark">
+<!--                        <thead style="--bs-table-bg: #0e7490; --bs-table-color: #ffffff;">-->
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">CPF</th>
+                                <th scope="col">E-mail</th>
+                                <th scope="col">Telefone</th>
+                                <th scope="col">Data Nasc.</th>
+                                <th scope="col">Cargo</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="u : ${users}">
+                                <td class="fw-bold" th:text="${u.idUser}">1</td>
+                                <td th:text="${u.nome}">Nome do Usuário</td>
+                                <td th:text="${u.cpf}">000.000.000-00</td>
+                                <td th:text="${u.email}">usuario@email.com</td>
+                                <td th:text="${u.telefone}">(00) 00000 0000</td>
+                                <td th:text="${#strings.arraySplit(u.dataNascimento, '-')
+                                    [2] + '/' + #strings.arraySplit(u.dataNascimento, '-')
+                                    [1] + '/' + #strings.arraySplit(u.dataNascimento, '-')
+                                    [0]}">01/01/2000
+                                    <!-- FORMATACAO para data dd/mm/yyyy -->
+                                </td>
+                                    
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${'administrador'.equalsIgnoreCase(u.cargo) 
+                                          ? 'bg-success' : 'bg-primary'}"
+                                          th:text="${u.cargo}">OPERADOR</span>
+                                </td>
+                                
+                                <td>
+                                    <button class="badge bg-secondary text-white border-0 px-2 py-1"
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="'#modalEditUser' + ${u.idUser}">
+                                        Editar
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(users)}">
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    Nenhum funcionário registrado
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            
+            <!---------------------- JANELA EDIÇÃO USUÁRIO ---------------------->
+            <th:block th:each="u : ${users}">
+                <div class="modal fade" th:id="'modalEditUser' + ${u.idUser}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" style="max-width: 650px;">
+                    <!-- max-width: 650px para tamanho da janela -->
+                        <div class="modal-content">
+
+                            <div class="modal-header text-white" style="background-color: #0e7490;">
+                                <h5 class="modal-title fw-bold">Editar Funcionário</h5>
+                                <button type="button" class="btn-close btn-close-white" 
+                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <form th:action="@{/admin/user/edit}" method="POST">
+                                <div class="modal-body row g-3 text-start">
+
+                                    <!-- ID OCULTO -->
+                                    <input type="hidden" name="idUser" th:value="${u.idUser}">
+
+                                    <!-- col-md-6 preenche metade da tela cada um -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Nome:</label>
+                                        <input type="text" name="nome" th:value="${u.nome}" 
+                                               class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">CPF:</label>
+                                        <input type="text" name="cpf" th:value="${u.cpf}" 
+                                               class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Data Nasc.:</label>
+                                        <input type="date" name="dataNascimento" th:value=
+                                               "${u.dataNascimento}" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Telefone:</label>
+                                        <input type="text" name="telefone" th:value=
+                                               "${u.telefone}" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold">Endereço:</label>
+                                        <input type="text" name="endereco" th:value=
+                                               "${u.endereco}" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold">E-mail:</label>
+                                        <input type="email" name="email" th:value=
+                                               "${u.email}" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Senha:</label>
+                                        <input type="password" name="senha" th:value=
+                                               "${u.senha}" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Confirmar Senha:</label>
+                                        <input type="password" name="confirmSenha" th:value=
+                                               "${u.confirmSenha}" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold">Cargo:</label>
+                                        <select name="cargo" class="form-select" required>
+                                            <option value="administrador" th:selected=
+                                                    "${u.cargo == 'administrador'}">Administrador</option>
+                                            <option value="operador" th:selected=
+                                                    "${u.cargo == 'operador'}">Operador</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Botoes -->
+                                <div class="modal-footer">
+                                    <!-- me-auto joga todo o resto para o lado oposto -->
+                                    <a th:href="@{/admin/user/delete/{id}(id=${u.idUser})}" 
+                                       class="btn btn-danger me-auto"
+                                       onclick="return confirm
+                                           ('ATENÇÃO: Deseja realmente excluir este funcionário?\nEssa ação não pode ser desfeita.')">
+                                        Excluir
+                                    </a>
+
+                                    <!-- Botoes na direita -->
+                                    <button type="button" class="btn btn-outline-primary" 
+                                            data-bs-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" class="btn btn-warning text-dark fw-semibold"
+                                            onclick="return confirm
+                                                ('Deseja realmente salvar as alterações?')">
+                                        Salvar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+            
+            
+            <!------------------------ ADD BUTTON ------------------------>
+            <div class="card shadow-sm p-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="mb-4 fw-bold" style="color: #0e7490;">Equipamentos</h3>
+                    <button class="btn btn-success" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#formCadastroEquip"
+                            aria-expanded="false" aria-controls="formCadastroEquip">
+                        + Novo Equipamento
+                    </button>
+                </div>
+                
+                
+                <!---------------------- ADD EQUIP ---------------------->
+                <div class="collapse mb-4" id="formCadastroEquip">
+                    <div class="card card-body bg-light border">
+                        <h5 class="card-title mb-3">Cadastrar Equipamento</h5>
+                        
+                        <form th:action="@{/admin/equip/salvar}" th:object="${equip}" method="POST" class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Nome:</label>
+                                <input type="text" th:field="*{nome}" class="form-control">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Modelo:</label>
+                                <input type="text" th:field="*{modelo}" class="form-control">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Data de Aquisição:</label>
+                                <input type="date" th:field="*{dataAquisicao}" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Horas de Uso:</label>
+                                <input type="number" step="0.1" th:field="*{horasUso}" class="form-control" 
+                                       required placeholder="0.0">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Vida Útil (Horas):</label>
+                                <input type="number" step="0.1" th:field="*{vidaUtil}" class="form-control">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Nível de Combustível (% aprox.):</label>
+                                <input type="number" step="1" max="100" min="0" th:field="*{nivelCombustivel}" 
+                                       class="form-control" required placeholder="100">
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Status:</label>
+                                <select th:field="*{status}" class="form-select" required>
+                                    <!-- <select> que cria a lista Dropdown, populada com <option> -->
+                                    <option value="Disponível">Disponível</option>
+                                    <option value="Em Uso">Em Uso</option>
+                                    <option value="Em Manutenção">Em Manutenção</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 text-end mt-3">
+                                <button type="submit" class="btn btn-outline-primary px-4">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                
+                <!---------------------- CARDS ---------------------->
+                <div class="row">
+                    <div class="col-md-6 col-lg-4 mb-4" th:each="item : ${equips}">
+                        <div th:replace="~{fragments/cardEquip :: cardEquip(${item})}"></div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(equips)}" class="col-12 text-center text-muted py-5">
+                        <h5>Nenhum equipamento encontrado</h5>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </body>
+</html>

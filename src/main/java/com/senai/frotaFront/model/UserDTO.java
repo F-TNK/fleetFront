@@ -13,24 +13,26 @@ public class UserDTO {
     private Long idUser;
     private String email;
     private String senha;
+    private String confirmSenha;
     private String nome;
     private String cpf;
     private String telefone;
-    private String enderco;
+    private String endereco;
     private String dataNascimento;
     private String cargo; // ADMIN ou OPERADOR
 
     public UserDTO() {
     }
 
-    public UserDTO(Long idUser, String email, String senha, String nome, String cpf, String telefone, String endereço, String dataNascimento, String cargo) {
+    public UserDTO(Long idUser, String email, String senha, String confirmSenha, String nome, String cpf, String telefone, String endereco, String dataNascimento, String cargo) {
         this.idUser = idUser;
         this.email = email;
         this.senha = senha;
+        this.confirmSenha = confirmSenha;
         this.nome = nome;
         this.cpf = cpf;
         this.telefone = telefone;
-        this.enderco = endereço;
+        this.endereco = endereco;
         this.dataNascimento = dataNascimento;
         this.cargo = cargo;
     }
@@ -59,6 +61,14 @@ public class UserDTO {
         this.senha = senha;
     }
 
+    public String getConfirmSenha() {
+        return confirmSenha;
+    }
+
+    public void setConfirmSenha(String confirmSenha) {
+        this.confirmSenha = confirmSenha;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -84,11 +94,11 @@ public class UserDTO {
     }
 
     public String getEndereco() {
-        return enderco;
+        return endereco;
     }
 
-    public void setEndereco(String endereço) {
-        this.enderco = endereço;
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 
     public String getDataNascimento() {
