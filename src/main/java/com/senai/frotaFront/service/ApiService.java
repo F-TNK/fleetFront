@@ -159,7 +159,7 @@ public class ApiService {
     
     // ----------------------- LIBERACAO -----------------------
 
-    public String registerLiberacao(LiberacaoDTO l, String token) {
+    public String addLiberacao(LiberacaoDTO l, String token) {
         return restClient.post()
                 .uri("/admin/liberacao")
                 .header("Authorization", "Bearer " + token)

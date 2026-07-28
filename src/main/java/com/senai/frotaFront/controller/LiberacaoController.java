@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -31,17 +34,14 @@ public class LiberacaoController {
 
     
     @GetMapping("/liberacoes")
-    public String liberacoes(HttpSession session, Model model) {
+    public String liberacoes(HttpSession session, Model model, RedirectAttributes redirect) {
         String token = (String) session.getAttribute("token");
         String role = (String) session.getAttribute("role");
 
-        // Validacao token
-        if (token == null) {
+        // Validacao token e admin
+        if (token == null || !"administrador".equalsIgnoreCase(role)) {
+            redirect.addFlashAttribute("erro", "Erro na sessão. Faça login novamente.");
             return "redirect:/login";
-        }
-        // Valida Admin, se nao redirect pra pagina do operado
-        if (!"administrador".equalsIgnoreCase(role)) {
-            return "redirect:/op";
         }
 
         model.addAttribute("alerta", restService.listAlerta(token));
@@ -54,17 +54,14 @@ public class LiberacaoController {
     }
 
     @GetMapping("/historico")
-    public String historico(HttpSession session, Model model) {
+    public String historico(HttpSession session, Model model, RedirectAttributes redirect) {
         String token = (String) session.getAttribute("token");
         String role = (String) session.getAttribute("role");
         
         // Validacao token e admin
-        if (token == null) {
+        if (token == null || !"administrador".equalsIgnoreCase(role)) {
+            redirect.addFlashAttribute("erro", "Erro na sessão. Faça login novamente.");
             return "redirect:/login";
-        }
-        // Valida Admin, se nao redirect pra pagina do operado
-        if (!"administrador".equalsIgnoreCase(role)) {
-            return "redirect:/op";
         }
 
         List<LiberacaoDTO> closeList = restService.listClose(token);
@@ -74,15 +71,25 @@ public class LiberacaoController {
     }
 
     @PostMapping("/admin/liberacao/save")
-    public String addLiberacao(@ModelAttribute LiberacaoDTO liberacao, HttpSession session) {
+    public String addLiberacao(@ModelAttribute LiberacaoDTO liberacao, HttpSession session, RedirectAttributes redirect) {
         String token = (String) session.getAttribute("token");
-        String role = (String) session.getAttribute("role");
+        String role = (String) session.getAttribute("role"); // Padronizado para "cargo"
         
-        // Validacao admin
-        if (token != null && "administrador".equalsIgnoreCase(role)) {
-            restService.registerLiberacao(liberacao, token);
+        if (token == null || !"administrador".equalsIgnoreCase(role)) {
+            redirect.addFlashAttribute("erro", "Erro na sessão. Faça login novamente.");
+            return "redirect:/login";
         }
-
+        
+        try {
+            restService.addLiberacao(liberacao, token);
+            redirect.addFlashAttribute("sucesso", "Liberação agendada");
+        } catch (HttpClientErrorException e) {
+            // Captura ResponseStatusException (erros) do Service(back)
+            redirect.addFlashAttribute("erro", e.getResponseBodyAsString());
+        } catch (Exception e) {
+            redirect.addFlashAttribute("erro", "Falha no agendamento. Tente novamente.");
+        }
+        
         return "redirect:/liberacoes";
     }
 
@@ -128,11 +135,12 @@ public class LiberacaoController {
     // ----------------------- OPERADOR -----------------------
 
     @GetMapping("/op")
-    public String opLiberacoes(HttpSession session, Model model) {
+    public String opLiberacoes(HttpSession session, Model model, RedirectAttributes redirect) {
         String token = (String) session.getAttribute("token");
         
         //Valid Token
         if (token == null) {
+            redirect.addFlashAttribute("erro", "Erro na sessão. Faça login novamente.");
             return "redirect:/login";
         }
 
@@ -147,22 +155,48 @@ public class LiberacaoController {
     }
 
     @PostMapping("/op/liberacao/pickup")
-    public String pickUp(@ModelAttribute LiberacaoDTO liberacao, HttpSession session) {
+    public String pickUp(@ModelAttribute LiberacaoDTO liberacao, HttpSession session, RedirectAttributes redirect) {
+        // RedirectAttributes permite addFlashAttribute(), carregando informacoes (mensagens de erro)
+        // atraves do redirect:/op para serem mostradas ao renderizar a tela novamente
         String token = (String) session.getAttribute("token");
 
-        if (token != null) {
+        if (token == null) {
+            redirect.addFlashAttribute("erro", "Erro na sessão. Faça login novamente.");
+            return "redirect:/login";
+        }
+
+        try {
             restService.pickUp(liberacao, token);
+            redirect.addFlashAttribute("sucesso", "Equipamento retirado");
+        } catch (HttpClientErrorException e) {
+            // Captura ResponseStatusException (erros) do Service(back)
+            redirect.addFlashAttribute("erro", e.getResponseBodyAsString());
+        } catch (Exception e) {
+            redirect.addFlashAttribute("erro", "Tente novamente.");
         }
 
         return "redirect:/op";
     }
 
     @PostMapping("/op/liberacao/close")
-    public String close(@ModelAttribute LiberacaoDTO liberacao, HttpSession session) {
+    public String close(@ModelAttribute LiberacaoDTO liberacao, HttpSession session, RedirectAttributes redirect) {
+        // RedirectAttributes permite addFlashAttribute(), carregando informacoes (mensagens de erro)
+        // atraves do redirect:/op para serem mostradas ao renderizar a tela novamente
         String token = (String) session.getAttribute("token");
 
-        if (token != null) {
+        if (token == null) {
+            redirect.addFlashAttribute("erro", "Erro na sessão. Faça login novamente.");
+            return "redirect:/login";
+        }
+
+        try {
             restService.close(liberacao, token);
+            redirect.addFlashAttribute("sucesso", "Devolução realizada com sucesso!");
+        } catch (HttpClientErrorException e) {
+            // Captura ResponseStatusException (erros) do Service(back)
+            redirect.addFlashAttribute("erro", e.getResponseBodyAsString());
+        } catch (Exception e) {
+            redirect.addFlashAttribute("erro", "Falha na devolução. Tente novamente.");
         }
 
         return "redirect:/op";
