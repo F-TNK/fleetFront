@@ -5,6 +5,7 @@
 package com.senai.frotaFront.controller;
 
 import com.senai.frotaFront.model.LiberacaoDTO;
+import com.senai.frotaFront.model.UserDTO;
 import com.senai.frotaFront.service.ApiService;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
@@ -48,6 +49,7 @@ public class LiberacaoController {
         model.addAttribute("open", restService.listOpen(token));
         model.addAttribute("operadores", restService.listUsers(token));
         model.addAttribute("equipamentos", restService.listEquip(token));
+        
         model.addAttribute("liberacao", new LiberacaoDTO());
 
         return "liberacoes";

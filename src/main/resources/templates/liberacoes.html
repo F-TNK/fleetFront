@@ -177,13 +177,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <form th:action="@{/admin/liberacao/save}" th:object="${liberacao}" method="POST" class="row g-3">
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">ID do Operador:</label>
-                            <input type="number" th:field="*{idOperador}" class="form-control" required>
+                            <label class="form-label fw-semibold">Operador:</label>
+                            <select th:field="*{idOperador}" class="form-select" required>
+                                <option value="" selected></option>
+                                <option th:each="op : ${operadores}" 
+                                        th:value="${op.idUser}" 
+                                        th:text="${op.nome}"></option>
+                            </select>
                         </div>
-
+                        
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">ID do Equipamento:</label>
-                            <input type="number" th:field="*{idEquip}" class="form-control" required>
+                            <label class="form-label fw-semibold">Equipamento:</label>
+                            <select th:field="*{idEquip}" class="form-select" required>
+                                <option value="" selected></option>
+                                <option th:each="op : ${equipamentos}" 
+                                        th:value="${op.idEquip}" 
+                                        th:text="${op.nome}"></option>
+                            </select>
                         </div>
 
                         <div class="col-md-6">
