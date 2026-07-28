@@ -140,7 +140,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                             <!-- Botoes -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary me-auto" 
+                                <button type="button" class="btn btn-outline-primary me-auto" 
                                         data-bs-dismiss="modal">
                                     Fechar
                                 </button>
@@ -233,7 +233,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <td th:text="${l.dataHoraDevolucao}">01/01/2000 00:00</td>
                                 
                                 <td>
-                                    <button class="badge bg-secondary text-white border-0 px-2 py-1"
+                                    <button class="badge bg-secondary text-light border-0 px-2 py-1"
                                             type="button"
                                             data-bs-toggle="modal"
                                             th:data-bs-target="'#modalEditLiberacao' + ${l.id}">
@@ -311,7 +311,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                                 <div class="modal-footer">
                                     <a th:href="@{/admin/liberacao/delete/{id}(id=${l.id})}" 
-                                       class="btn btn-danger me-auto"
+                                       class="btn btn-outline-danger me-auto"
                                        onclick="return confirm(
                                                    'ATENÇÃO: Deseja realmente excluir esta liberação?\nEssa ação não pode ser desfeita.')">
                                         Excluir
@@ -320,7 +320,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">
                                         Cancelar
                                     </button>
-                                    <button type="submit" class="btn btn-warning text-dark fw-semibold"
+                                    <button type="submit" class="btn btn-outline-warning  fw-semibold"
                                             onclick="return confirm(
                                                         'Deseja realmente salvar as alterações?')">
                                         Salvar
