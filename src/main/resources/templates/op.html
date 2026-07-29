@@ -163,6 +163,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <div th:if="${l.dataHoraRetiradaReal == null}" class="w-100 text-end">
                                     <form th:action="@{/op/liberacao/pickup}" method="post" class="d-inline">
                                         <input type="hidden" name="id" th:value="${l.id}">
+                                        <input type="hidden" name="idEquip" th:value="${l.idEquip}">
+
                                         <button type="submit" 
                                                 class="btn btn-outline-success fw-bold px-4"
                                                 onclick="return confirm('Confirmar retirada do equipamento?')">

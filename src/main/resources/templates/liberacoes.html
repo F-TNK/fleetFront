@@ -274,26 +274,38 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
-                            <form th:action="@{/admin/liberacao/edit}" method="POST">
+                            <form th:action="@{/admin/liberacao/edit}" th:object="${liberacao}" method="POST">
                                 <div class="modal-body row g-3 text-start">
 
                                     <!-- ID OCULTO -->
                                     <input type="hidden" name="id" th:value="${l.id}">
-                                    <!-- IDs de vinculo -->
+                                    
                                     <input type="hidden" name="idOperador" th:value="${l.idOperador}">
                                     <input type="hidden" name="idEquip" th:value="${l.idEquip}">
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Operador:</label>
-                                        <input type="text" name="nomeOp" th:value="${l.nomeOp}" 
-                                               class="form-control" readonly>
+                                        <select th:field="*{idOperador}" class="form-select" required>
+                                            <option value=""></option>
+                                            <option th:each="op : ${operadores}" 
+                                                    th:value="${op.idUser}" 
+                                                    th:text="${op.nome}"
+                                                    th:selected="${op.nome == l.nomeOp}">
+                                            </option>
+                                        </select>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Equipamento:</label>
-                                        <input type="text" name="nomeEquip" th:value="${l.nomeEquip}" 
-                                               class="form-control" readonly>
-                                    </div>
+                                        <select th:field="*{idEquip}" class="form-select" required>
+                                            <option value=""></option>
+                                            <option th:each="op : ${equipamentos}" 
+                                                    th:value="${op.idEquip}" 
+                                                    th:text="${op.nome}"
+                                                    th:selected="${op.nome == l.nomeEquip}">
+                                            </option>
+                                        </select>
+                                    </div>                                                                                          
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Data/Hora Retirada:</label>

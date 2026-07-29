@@ -75,7 +75,7 @@ public class LiberacaoController {
     @PostMapping("/admin/liberacao/save")
     public String addLiberacao(@ModelAttribute LiberacaoDTO liberacao, HttpSession session, RedirectAttributes redirect) {
         String token = (String) session.getAttribute("token");
-        String role = (String) session.getAttribute("role"); // Padronizado para "cargo"
+        String role = (String) session.getAttribute("role"); 
         
         if (token == null || !"administrador".equalsIgnoreCase(role)) {
             redirect.addFlashAttribute("erro", "Erro na sessão. Faça login novamente.");

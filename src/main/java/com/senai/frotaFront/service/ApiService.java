@@ -147,6 +147,14 @@ public class ApiService {
                 .body(String.class);
     }
     
+    public EquipDTO findById(Long id, String token) {
+        return restClient.get()
+                .uri("/equip/" + id)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .body(EquipDTO.class);
+    }
+    
     public String deleteEquip(Long id, String token) {
         return restClient.delete()
                 .uri("/equip/" + id)
