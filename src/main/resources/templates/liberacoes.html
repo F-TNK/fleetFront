@@ -179,7 +179,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Operador:</label>
                             <select th:field="*{idOperador}" class="form-select" required>
-                                <option value="" selected></option>
+                                <option value="" selected>--Selecione o Operador--</option>
                                 <option th:each="op : ${operadores}" 
                                         th:value="${op.idUser}" 
                                         th:text="${op.nome}"></option>
@@ -189,7 +189,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Equipamento:</label>
                             <select th:field="*{idEquip}" class="form-select" required>
-                                <option value="" selected></option>
+                                <option value="" selected>-- Selecione o Equipamento --</option>
                                 <option th:each="op : ${equipamentos}" 
                                         th:value="${op.idEquip}" 
                                         th:text="${op.nome}"></option>
@@ -280,8 +280,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     <!-- ID OCULTO -->
                                     <input type="hidden" name="id" th:value="${l.id}">
                                     
-                                    <input type="hidden" name="idOperador" th:value="${l.idOperador}">
-                                    <input type="hidden" name="idEquip" th:value="${l.idEquip}">
+<!--                                    <input type="hidden" name="idOperador" th:value="${l.idOperador}">
+                                    <input type="hidden" name="idEquip" th:value="${l.idEquip}">-->
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Operador:</label>
@@ -327,7 +327,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                                     <div class="col-12">
                                         <label class="form-label fw-semibold">Observações (Retirada):</label>
-                                        <textarea name="observacoesRetirada" class="form-control" rows="2" th:text="${l.observacoesRetirada}"></textarea>
+                                        <textarea name="observacoesRetirada" class="form-control" rows="2" 
+                                                  th:text="${l.observacoesRetirada}"></textarea>
                                     </div>
                                 </div>
 
