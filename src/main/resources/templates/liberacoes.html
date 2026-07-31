@@ -16,6 +16,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <!---------------------- TABELA ALERTA ---------------------->
             <div class="card shadow-sm p-4 mb-4 border-danger">
                 <h3 class="mb-4 fw-bold text-danger">Liberações Com Ocorrência</h3>
+                
+                <!-- FILTROS -->
+                <div class="row mb-4 g-3 bg-light p-3 rounded border">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Filtrar por Operador:</label>
+                        <select id="filtroOperador" class="form-select">
+                            <option value="">Todos os Operadores</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Filtrar por Equipamento:</label>
+                        <select id="filtroEquipamento" class="form-select">
+                            <option value="">Todos os Equipamentos</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Filtrar por Data (Retirada):</label>
+                        <!-- input type="date" sempre gera valores no formato YYYY-MM-DD -->
+                        <input type="date" id="filtroData" class="form-control">
+                    </div>
+                </div>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-hover align-middle mb-0">
@@ -34,8 +55,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <td class="fw-bold" th:text="${l.id}">1</td>
                                 <td th:text="${l.nomeOp}">Nome do Operador</td>
                                 <td th:text="${l.nomeEquip}">Nome do Equipamento</td>
-                                <td th:text="${l.dataHoraRetirada}">01/01/2000 00:00</td>
-                                <td th:text="${l.dataHoraDevolucao}">01/01/2000 00:00</td>
+                                <td th:text="${#temporals.format(l.dataHoraRetirada, 'dd/MM/yyyy HH:mm')}">01/01/2000 00:00</td>
+                                <td th:text="${#temporals.format(l.dataHoraDevolucao, 'dd/MM/yyyy HH:mm')}">01/01/2000 00:00</td>
                                 
                                 <td>
                                     <button class="badge bg-secondary text-light border-0 px-2 py-1 fw-bold"
@@ -221,6 +242,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <!---------------------- TABELA OPEN ---------------------->
             <div class="card shadow-sm p-4 mb-4">
                 <h3 class="mb-4 fw-bold" style="color: #0e7490;">Liberações Abertas</h3>
+                
+                <!-- FILTROS -->
+                <div class="row mb-4 g-3 bg-light p-3 rounded border">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Filtrar por Operador:</label>
+                        <select id="filtroOperador" class="form-select">
+                            <option value="">Todos os Operadores</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Filtrar por Equipamento:</label>
+                        <select id="filtroEquipamento" class="form-select">
+                            <option value="">Todos os Equipamentos</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Filtrar por Data (Retirada):</label>
+                        <!-- input type="date" sempre gera valores no formato YYYY-MM-DD -->
+                        <input type="date" id="filtroData" class="form-control">
+                    </div>
+                </div>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-hover align-middle mb-0">
@@ -239,8 +281,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <td class="fw-bold" th:text="${l.id}">1</td>
                                 <td th:text="${l.nomeOp}">Nome do Operador</td>
                                 <td th:text="${l.nomeEquip}">Nome do Equipamento</td>
-                                <td th:text="${l.dataHoraRetirada}">01/01/2000 00:00</td>
-                                <td th:text="${l.dataHoraDevolucao}">01/01/2000 00:00</td>
+                                <td th:text="${#temporals.format(l.dataHoraRetirada, 'dd/MM/yyyy HH:mm')}">01/01/2000 00:00</td>
+                                <td th:text="${#temporals.format(l.dataHoraDevolucao, 'dd/MM/yyyy HH:mm')}">01/01/2000 00:00</td>
                                 
                                 <td>
                                     <button class="badge bg-secondary text-light border-0 px-2 py-1"

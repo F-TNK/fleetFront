@@ -42,14 +42,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <a class="nav-link text-white text-uppercase fw-semibold" 
                                aria-current="page" th:href="@{/historico}">Histórico</a>
                         </li>
-                        <li class="nav-item">
-                            <span class="nav-link text-white display-1 fw-semibold" 
-                               aria-current="page" th:href="@{/}">|</span>
-                        </li>
-                        <li class="nav-item px-2">
-                            <a class="nav-link text-white text-uppercase fw-semibold" 
-                               aria-current="page" th:href="@{/busca}">Busca</a>
-                        </li>
                     </ul>
                     <div class="d-flex gap-2">
                         <a th:href="@{/logout}" class="btn btn-outline-light">Sair</a>
@@ -59,7 +51,82 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             </div>
         </nav>
         
-        
+        <!-- SCRIPT DE FILTRAGEM FRONT-END -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Pega as linhas da tabela (ignorando a linha de "Nenhum registro encontrado")
+                const tableBody = document.querySelector(".table-responsive table tbody");
+                const rows = tableBody.querySelectorAll("tr:not(:last-child:has(td[colspan]))");
+
+                const selectOperador = document.getElementById("filtroOperador");
+                const selectEquipamento = document.getElementById("filtroEquipamento");
+                const inputData = document.getElementById("filtroData");
+
+                // Usando SET (como no seu exemplo) para guardar nomes únicos
+                let operadoresUnicos = new Set();
+                let equipamentosUnicos = new Set();
+
+                // 1. Extrair os dados da tabela para montar os Selects
+                rows.forEach(row => {
+                    const cols = row.querySelectorAll("td");
+                    if(cols.length > 2) {
+                        // cols[1] é Operador, cols[2] é Equipamento
+                        operadoresUnicos.add(cols[1].innerText.trim());
+                        equipamentosUnicos.add(cols[2].innerText.trim());
+                    }
+                });
+
+                // 2. Preencher os Selects em ordem alfabética
+                [...operadoresUnicos].sort().forEach(op => selectOperador.add(new Option(op, op)));
+                [...equipamentosUnicos].sort().forEach(eq => selectEquipamento.add(new Option(eq, eq)));
+
+                // 3. Função central de filtragem
+                function aplicarFiltros() {
+                    const filtroOp = selectOperador.value;
+                    const filtroEq = selectEquipamento.value;
+                    const filtroDt = inputData.value; // Formato padrão do input date: YYYY-MM-DD
+
+                    rows.forEach(row => {
+                        const cols = row.querySelectorAll("td");
+                        if(cols.length < 4) return;
+
+                        const opNome = cols[1].innerText.trim();
+                        const eqNome = cols[2].innerText.trim();
+                        const dataStringText = cols[3].innerText.trim(); 
+
+                        // Tratar a data: O HTML mostra dd/mm/yyyy hh:mm, mas o input date lê YYYY-MM-DD.
+                        let dataFormatada = "";
+                        if(dataStringText) {
+                            const dataPart = dataStringText.split(' ')[0]; // pega só "dd/mm/yyyy" ou "yyyy-mm-dd"
+
+                            if (dataPart.includes('/')) {
+                                const [dia, mes, ano] = dataPart.split('/');
+                                dataFormatada = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+                            } else if (dataPart.includes('-')) {
+                                dataFormatada = dataPart;
+                            }
+                        }
+
+                        // Verifica se cada campo bate com o filtro (se for vazio "", passa)
+                        const exibeOp = (filtroOp === "" || opNome === filtroOp);
+                        const exibeEq = (filtroEq === "" || eqNome === filtroEq);
+                        const exibeDt = (filtroDt === "" || dataFormatada === filtroDt);
+
+                        // Mostra a linha só se atender a TODOS os filtros
+                        if (exibeOp && exibeEq && exibeDt) {
+                            row.style.display = ""; // Volta a exibir
+                        } else {
+                            row.style.display = "none"; // Oculta da tabela
+                        }
+                    });
+                }
+
+                // 4. Acionar os filtros sempre que houver alteração
+                selectOperador.addEventListener("change", aplicarFiltros);
+                selectEquipamento.addEventListener("change", aplicarFiltros);
+                inputData.addEventListener("change", aplicarFiltros);
+            });
+        </script>
         
         <div class="container">
             <!-- mensagens ERRO e SUCESSO globais  -->

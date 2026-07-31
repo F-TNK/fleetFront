@@ -105,7 +105,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Horímetro Inicial:</label>
+                                    <label class="form-label fw-semibold">Combustível Inicial:</label>
                                     <input type="text" class="form-control bg-light" th:value="${l.combustivelInicial}" readonly>
                                 </div>
 
@@ -120,13 +120,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <!-- PARTE DEVOLUCAO !! depois de dataHoraRetiradaReal -->
                             <div class="col-12 mt-4" th:if="${l.dataHoraRetiradaReal != null}">
                                 <form th:action="@{/op/liberacao/close}" method="post" th:id="'formClose' + ${l.id}">
+                                    <!-- Hidden fields pra importar valores necessarios -->
                                     <input type="hidden" name="id" th:value="${l.id}">
+                                    <input type="hidden" name="idEquip" th:value="${l.idEquip}">
+                                    <input type="hidden" name="horimetroInicial" th:value="${l.horimetroInicial}">
+                                    <input type="hidden" name="combustivelInicial" th:value="${l.combustivelInicial}">
 
                                     <div class="row g-3 p-3 bg-white border border-success rounded shadow-sm">
                                         <h6 class="fw-bold text-success mb-0 border-bottom pb-2">
                                             <i class="bi bi-arrow-return-left"></i> Registrar Devolução
                                         </h6>
-
+                                        
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">Horímetro Final <span class="text-danger">*</span></label>
                                             <input type="number" step="0.1" class="form-control" name="horimetroFinal" required>
@@ -134,10 +138,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">Combustível Final (%) <span class="text-danger">*</span></label>
-                                            <input type="number" class="form-control" name="combustivelFinal" required min="0" max="100">
+                                            <input type="number" step="5" class="form-control" name="combustivelFinal" required min="0" max="100">
                                         </div>
 
-                                        <!-- toggle alerta  -->
+                                        <!-- toggle alerta  --> 
                                         <div class="col-12 mt-3">
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" name="alerta" th:id="'alerta' + ${l.id}" value="true">

@@ -71,8 +71,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                  role="progressbar"
                                  th:style="'width: ' + ${e.nivelCombustivel} + '%'"
                                  th:classappend="${
-                                    e.nivelCombustivel < 20 ? ' bg-danger' :
-                                    (e.nivelCombustivel < 50 ? ' bg-warning' : ' bg-success')
+                                    e.nivelCombustivel <= 25 ? ' bg-danger' :
+                                    (e.nivelCombustivel <= 50 ? ' bg-warning' : ' bg-success')
                                  }">
                             </div>
                         </div>
