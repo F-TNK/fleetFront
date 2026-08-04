@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -82,14 +83,21 @@ public class AdminController {
     }
     
     @PostMapping("/user/edit")
-    public String editUser(@ModelAttribute UserDTO u, HttpSession session) {
+    public String editUser(@ModelAttribute UserDTO u, HttpSession session, Model model, RedirectAttributes redirect) {
         String token = (String) session.getAttribute("token");
-
+        
         if (token != null) {
-            rService.editUser(u, token);
+        if (u.getSenha() != null && !u.getSenha().trim().isEmpty()) {
+            if (!u.getSenha().equals(u.getConfirmSenha())) {
+                redirect.addFlashAttribute("erro", "As senhas não estão iguais");
+                redirect.addFlashAttribute("user", u);
+                return "redirect:/admin"; 
+            }
         }
+        rService.editUser(u, token);
+    }
 
-        return "redirect:/admin";
+    return "redirect:/admin";
     }
     
     @GetMapping("/user/delete/{id}")

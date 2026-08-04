@@ -36,10 +36,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <td th:text="${l.dataHoraRetirada}">01/01/2000 00:00</td>
                                 <td th:text="${l.dataHoraDevolucao}">01/01/2000 00:00</td>
                                 <td>
-                                    <span th:if="${l.dataHoraRetiradaReal == null}" 
-                                          class="badge bg-warning text-dark">Aguardando Retirada</span>
                                     <span th:if="${l.dataHoraRetiradaReal != null}" 
-                                          class="badge bg-success">Em Uso</span>
+                                          class="badge bg-success text-light">Em Uso</span>
+                                    <!-- dataHoraRetiradaReal == null e dataHoraRetirada no passado -->
+                                    <span th:if="${l.dataHoraRetiradaReal == null and !l.dataHoraRetirada.isAfter(#temporals.createNow())}" 
+                                          class="badge bg-warning text-dark">Aguardando Retirada</span>
+                                    <span th:if="${l.dataHoraRetiradaReal == null and l.dataHoraRetirada.isAfter(#temporals.createNow())}" 
+                                          class="badge bg-primary text-light">Aberta</span>
                                 </td>
                                 <td>
                                     <button class="badge bg-secondary text-light border-0 px-2 py-1 fw-bold"

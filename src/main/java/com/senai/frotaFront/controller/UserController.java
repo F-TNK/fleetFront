@@ -91,7 +91,7 @@ public class UserController {
         if (session.getAttribute("token") == null) {
             return "redirect:/login";
         }
-        return "index"; // ou a página home do operador
+        return "index";
     }
     
     @GetMapping("/logout")
@@ -120,5 +120,53 @@ public class UserController {
         
         restService.register(user);
         return "redirect:/login";
+    }
+
+    @GetMapping("/profile")
+    public String profile(HttpSession session, Model model) {
+        String token = (String) session.getAttribute("token");
+        Long id = (Long) session.getAttribute("idUser");
+        
+        if (token == null) {
+            return "redirect:/login";
+        }
+        
+        try {
+            UserDTO u = restService.findUserById(id, token);
+//            u.setConfirmSenha("");
+            
+            model.addAttribute("user", u);
+        } catch (Exception e) {
+            model.addAttribute("erro", "Erro ao buscar dados do perfil.");
+            model.addAttribute("user", new UserDTO());
+        }
+
+        return "profile";
+    }
+
+    @PostMapping("/profile/edit")
+    public String editProfile(@ModelAttribute UserDTO user, HttpSession session, Model model) {
+        String token = (String) session.getAttribute("token");
+        
+        if (token == null) {
+            return "redirect:/login";
+        }
+        if (!user.getSenha().equals(user.getConfirmSenha())) {
+            model.addAttribute("erro", "As senhas não estão iguais");
+            model.addAttribute("user", user);
+            return "profile";
+        }
+        
+        try {
+            restService.editProfile(user, token);
+            model.addAttribute("sucesso", "Perfil atualizado com sucesso!");
+            
+            session.setAttribute("nome", user.getNome());
+            
+        } catch (Exception e) {
+            model.addAttribute("erro", "Erro ao atualizar o perfil.");
+        }
+        
+        return "profile";
     }
 }

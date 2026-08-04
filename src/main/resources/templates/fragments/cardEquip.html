@@ -93,9 +93,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </span>
 
                     <!-- BOTOES DE ACAO (Direita) -->
+                    
                     <div class="d-flex gap-2">
                         <!-- EDITAR -->
-                        <button class="btn btn-outline-secondary btn-sm"
+                        <button th:if="${e.status != 'Em Uso'}"
+                                class="btn btn-outline-secondary btn-sm"
                                 type="button"
                                 data-bs-toggle="modal"
                                 th:data-bs-target="'#modalEditarEquip' + ${e.idEquip}">
@@ -166,8 +168,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         <!-- <select> que cria a lista Dropdown, populada com <option> -->
                                         <option value="Disponível" 
                                                 th:selected="${e.status == 'Disponível'}">Disponível</option>
-                                        <option value="Em Uso" 
-                                                th:selected="${e.status == 'Em Uso'}">Em Uso</option>
                                         <option value="Em Manutenção" 
                                                 th:selected="${e.status == 'Em Manutenção'}">Em Manutenção</option>
                                     </select>

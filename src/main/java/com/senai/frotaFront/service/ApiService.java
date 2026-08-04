@@ -105,6 +105,25 @@ public class ApiService {
                 .body(String.class);
     }
     
+    // ----------------------- OPERADOR -----------------------
+    
+    public UserDTO findUserById(Long id, String token) {
+        return restClient.get()
+                .uri("/user/profile/" + id)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .body(UserDTO.class);
+    }
+    
+    public String editProfile(UserDTO u, String token) {
+        return restClient.put()
+                .uri("/user/profile/edit")
+                .header("Authorization", "Bearer " + token)
+                .body(u)
+                .retrieve()
+                .body(String.class);
+    }
+    
     
     // ----------------------- EQUIP -----------------------
     
@@ -220,23 +239,23 @@ public class ApiService {
         return Arrays.asList(liberacoes);
     }
     
-    public List<LiberacaoDTO> listByOp(Long idUser, String token) {
-        LiberacaoDTO[] liberacoes = restClient.get()
-                .uri("/admin/liberacao/operador/" + idUser)
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .body(LiberacaoDTO[].class);
-        return Arrays.asList(liberacoes);
-    }
-    
-    public List<LiberacaoDTO> listByEquip(Long idEquip, String token) {
-        LiberacaoDTO[] liberacoes = restClient.get()
-                .uri("/admin/liberacao/equipamento/" + idEquip)
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .body(LiberacaoDTO[].class);
-        return Arrays.asList(liberacoes);
-    }
+//    public List<LiberacaoDTO> listByOp(Long idUser, String token) {;;
+//        LiberacaoDTO[] liberacoes = restClient.get()
+//                .uri("/admin/liberacao/operador/" + idUser)
+//                .header("Authorization", "Bearer " + token)
+//                .retrieve()
+//                .body(LiberacaoDTO[].class);
+//        return Arrays.asList(liberacoes);
+//    }
+//    
+//    public List<LiberacaoDTO> listByEquip(Long idEquip, String token) {
+//        LiberacaoDTO[] liberacoes = restClient.get()
+//                .uri("/admin/liberacao/equipamento/" + idEquip)
+//                .header("Authorization", "Bearer " + token)
+//                .retrieve()
+//                .body(LiberacaoDTO[].class);
+//        return Arrays.asList(liberacoes);
+//    }
 
     public String resolve(Long id, String token) {
         return restClient.put()
