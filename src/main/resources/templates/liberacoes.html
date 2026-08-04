@@ -21,20 +21,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <div class="row mb-4 g-3 bg-light p-3 rounded border">
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Filtrar por Operador:</label>
-                        <select id="filtroOperador" class="form-select">
+                        <select class="form-select filtro-operador">
                             <option value="">Todos os Operadores</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Filtrar por Equipamento:</label>
-                        <select id="filtroEquipamento" class="form-select">
+                        <select class="form-select filtro-equipamento">
                             <option value="">Todos os Equipamentos</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Filtrar por Data (Retirada):</label>
                         <!-- input type="date" sempre gera valores no formato YYYY-MM-DD -->
-                        <input type="date" id="filtroData" class="form-control">
+                        <input type="date" class="form-control filtro-data">
                     </div>
                 </div>
 
@@ -247,20 +247,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <div class="row mb-4 g-3 bg-light p-3 rounded border">
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Filtrar por Operador:</label>
-                        <select id="filtroOperador" class="form-select">
+                        <select class="form-select filtro-operador">
                             <option value="">Todos os Operadores</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Filtrar por Equipamento:</label>
-                        <select id="filtroEquipamento" class="form-select">
+                        <select class="form-select filtro-equipamento">
                             <option value="">Todos os Equipamentos</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Filtrar por Data (Retirada):</label>
                         <!-- input type="date" sempre gera valores no formato YYYY-MM-DD -->
-                        <input type="date" id="filtroData" class="form-control">
+                        <input type="date" class="form-control filtro-data">
                     </div>
                 </div>
 
@@ -273,6 +273,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <th scope="col">Equipamento</th>
                                 <th scope="col">Data/Hora de Retirada</th>
                                 <th scope="col">Data/Hora de Devolução</th>
+                                <th scope="col">Status</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -283,13 +284,33 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <td th:text="${l.nomeEquip}">Nome do Equipamento</td>
                                 <td th:text="${#temporals.format(l.dataHoraRetirada, 'dd/MM/yyyy HH:mm')}">01/01/2000 00:00</td>
                                 <td th:text="${#temporals.format(l.dataHoraDevolucao, 'dd/MM/yyyy HH:mm')}">01/01/2000 00:00</td>
-                                
+                                <!-- Badge modular -->
                                 <td>
-                                    <button class="badge bg-secondary text-light border-0 px-2 py-1"
+                                    <span th:if="${l.dataHoraRetiradaReal != null}" 
+                                          class="badge bg-success text-light">Em Uso</span>
+                                    <!-- dataHoraRetiradaReal == null e dataHoraRetirada no passado -->
+                                    <span th:if="${l.dataHoraRetiradaReal == null and !l.dataHoraRetirada.isAfter(#temporals.createNow())}" 
+                                          class="badge bg-warning text-dark">Aguardando</span>
+                                    <span th:if="${l.dataHoraRetiradaReal == null and l.dataHoraRetirada.isAfter(#temporals.createNow())}" 
+                                          class="badge bg-primary text-light">Aberta</span>
+                                </td>
+                                <!-- coluna botoes modular -->
+                                <td>
+                                    <!-- Botão Editar (Aparece somente se NÃO houver data de retirada real) -->
+                                    <button th:if="${l.dataHoraRetiradaReal == null}"
+                                            class="badge bg-secondary text-light border-0 px-2 py-1"
                                             type="button"
                                             data-bs-toggle="modal"
                                             th:data-bs-target="'#modalEditLiberacao' + ${l.id}">
                                         Editar
+                                    </button>
+                                    <!-- dataHoraRetiradaReal != null. troca janela oculta -->
+                                    <button th:if="${l.dataHoraRetiradaReal != null}"
+                                            class="badge bg-secondary text-light border-0 px-2 py-1 fw-bold"
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="'#modalInfoOpenLiberacao' + ${l.id}">
+                                        INFO
                                     </button>
                                 </td>
                             </tr>
@@ -392,6 +413,92 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     </button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+            
+            <!-------------------- JANELA OCULTA 3 (INFO - EM USO) -------------------->
+            <th:block th:each="l : ${open}">
+                <!-- dataHoraRetiradaReal != null. troca janela oculta -->
+                <div th:if="${l.dataHoraRetiradaReal != null}" 
+                     class="modal fade" th:id="'modalInfoOpenLiberacao' + ${l.id}" tabindex="-1" aria-hidden="true">
+
+                    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 800px;">
+                        <div class="modal-content">
+                            
+                            <div class="modal-header text-white" style="background-color: #0e7490;">
+                                <h5 class="modal-title fw-bold">Informações da Liberação (Em Uso)</h5>
+                                <button type="button" class="btn-close btn-close-white" 
+                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body row g-3 text-start">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Operador:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.nomeOp}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Equipamento:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.nomeEquip}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-muted">Retirada (Agendada):</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.dataHoraRetirada}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-muted">Devolução (Agendada):</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.dataHoraDevolucao}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-primary">Retirada (Real):</label>
+                                    <input type="text" class="form-control bg-light border-primary" th:value="${l.dataHoraRetiradaReal}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-primary">Devolução (Real):</label>
+                                    <input type="text" class="form-control bg-light border-primary" th:value="${l.dataHoraDevolucaoReal}" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Hor. Inicial:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.horimetroInicial}" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Hor. Final:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.horimetroFinal}" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Comb. Inicial:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.combustivelInicial != null ? l.combustivelInicial + '%' : ''}" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Comb. Final:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.combustivelFinal != null ? l.combustivelFinal + '%' : ''}" readonly>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Local de Uso:</label>
+                                    <input type="text" class="form-control bg-light" th:value="${l.localUso}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Observações de Retirada:</label>
+                                    <textarea class="form-control bg-light" rows="3" th:text="${l.observacoesRetirada}" readonly></textarea>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-danger">Observações de Devolução (Problema):</label>
+                                    <textarea class="form-control bg-light border-danger" rows="3" th:text="${l.observacoesDevolucao}" readonly></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

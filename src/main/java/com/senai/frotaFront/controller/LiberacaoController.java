@@ -122,13 +122,24 @@ public class LiberacaoController {
     }
 
     @GetMapping("/admin/liberacao/resolve/{id}")
-    public String resolve(@PathVariable Long id, HttpSession session) {
+    public String resolve(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
         String token = (String) session.getAttribute("token");
         String role = (String) session.getAttribute("role");
         
         // Validacao token e admin
         if (token != null && "administrador".equalsIgnoreCase(role)) {
-            restService.resolve(id, token);
+            
+            try {
+                restService.resolve(id, token);
+                redirectAttributes.addFlashAttribute("sucesso", "Ocorrência concluída com sucesso!");
+
+            } catch (HttpClientErrorException.BadRequest e) {
+                // Captura ResponseStatusException (erros) do Service(back)
+                redirectAttributes.addFlashAttribute("erro", "Equipamento não pode ser liberado. Horímetro muito alto");
+
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("erro", "Falha no processo. Tente novamente");
+            }
         }
 
         return "redirect:/liberacoes";
