@@ -109,7 +109,7 @@ public class ApiService {
     
     public UserDTO findUserById(Long id, String token) {
         return restClient.get()
-                .uri("/user/profile/" + id)
+                .uri("/op/liberacao/" + id)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .body(UserDTO.class);
@@ -117,7 +117,7 @@ public class ApiService {
     
     public String editProfile(UserDTO u, String token) {
         return restClient.put()
-                .uri("/user/profile/edit")
+                .uri("/op/liberacao/edit")
                 .header("Authorization", "Bearer " + token)
                 .body(u)
                 .retrieve()
