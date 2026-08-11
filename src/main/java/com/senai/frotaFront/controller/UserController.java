@@ -151,22 +151,24 @@ public class UserController {
         if (token == null) {
             return "redirect:/login";
         }
+        
         if (!user.getSenha().equals(user.getConfirmSenha())) {
             model.addAttribute("erro", "As senhas não estão iguais");
             model.addAttribute("user", user);
             return "profile";
+        } else {
+            try {
+                restService.editProfile(user, token);
+                model.addAttribute("sucesso", "Perfil atualizado com sucesso!");
+                session.setAttribute("nome", user.getNome());
+
+            } catch (Exception e) {
+                model.addAttribute("erro", "Erro ao atualizar o perfil.");
+            }
+
+            model.addAttribute("user", user);
         }
         
-        try {
-            restService.editProfile(user, token);
-            model.addAttribute("sucesso", "Perfil atualizado com sucesso!");
-            
-            session.setAttribute("nome", user.getNome());
-            
-        } catch (Exception e) {
-            model.addAttribute("erro", "Erro ao atualizar o perfil.");
-        }
-        
-        return "profile";
+        return "op";
     }
 }

@@ -33,14 +33,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <tr th:each="l : ${liberacoes}">
                                 <td class="fw-bold" th:text="${l.id}">1</td>
                                 <td th:text="${l.nomeEquip}">Nome Equipamento</td>
-                                <td th:text="${l.dataHoraRetirada}">01/01/2000 00:00</td>
-                                <td th:text="${l.dataHoraDevolucao}">01/01/2000 00:00</td>
+                                <td th:text="${#temporals.format(l.dataHoraRetirada, 'dd/MM/yyyy HH:mm')}">01/01/2000 00:00</td>
+                                <td th:text="${#temporals.format(l.dataHoraDevolucao, 'dd/MM/yyyy HH:mm')}">01/01/2000 00:00</td>
                                 <td>
                                     <span th:if="${l.dataHoraRetiradaReal != null}" 
                                           class="badge bg-success text-light">Em Uso</span>
                                     <!-- dataHoraRetiradaReal == null e dataHoraRetirada no passado -->
                                     <span th:if="${l.dataHoraRetiradaReal == null and !l.dataHoraRetirada.isAfter(#temporals.createNow())}" 
-                                          class="badge bg-warning text-dark">Aguardando Retirada</span>
+                                          class="badge bg-warning text-dark">Aguardando</span>
                                     <span th:if="${l.dataHoraRetiradaReal == null and l.dataHoraRetirada.isAfter(#temporals.createNow())}" 
                                           class="badge bg-primary text-light">Aberta</span>
                                 </td>
@@ -89,12 +89,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold text-muted">Retirada Agendada:</label>
-                                    <input type="text" class="form-control bg-light" th:value="${l.dataHoraRetirada}" readonly>
+                                    <input type="text" class="form-control bg-light border-primary" 
+                                           th:value="${#temporals.format(l.dataHoraRetirada, 'dd/MM/yyyy HH:mm')}" readonly>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold text-muted">Devolução Agendada:</label>
-                                    <input type="text" class="form-control bg-light" th:value="${l.dataHoraDevolucao}" readonly>
+                                    <input type="text" class="form-control bg-light border-primary" 
+                                           th:value="${#temporals.format(l.dataHoraDevolucao, 'dd/MM/yyyy HH:mm')}" readonly>
                                 </div>
 
                                 <div class="col-12">

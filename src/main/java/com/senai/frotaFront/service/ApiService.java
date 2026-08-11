@@ -105,6 +105,15 @@ public class ApiService {
                 .body(String.class);
     }
     
+    public List<UserDTO> listOp(String token) {
+        UserDTO[] op = restClient.get()
+                .uri("/admin/user/op")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .body(UserDTO[].class);
+        return Arrays.asList(op);
+    }
+    
     // ----------------------- OPERADOR -----------------------
     
     public UserDTO findUserById(Long id, String token) {

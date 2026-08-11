@@ -348,27 +348,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Operador:</label>
-                                        <select th:field="*{idOperador}" class="form-select" required>
-                                            <option value=""></option>
+                                        <select name="idOperador" class="form-select" required>
+<!--                                            <option value=""></option>-->
                                             <option th:each="op : ${operadores}" 
                                                     th:value="${op.idUser}" 
                                                     th:text="${op.nome}"
-                                                    th:selected="${op.nome == l.nomeOp}">
+                                                    th:selected="${op.idUser == l.idOperador}">
                                             </option>
                                         </select>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Equipamento:</label>
-                                        <select th:field="*{idEquip}" class="form-select" required>
-                                            <option value=""></option>
+                                        <select name="idEquip" class="form-select" required>
+<!--                                            <option value=""></option>-->
                                             <option th:each="op : ${equipamentos}" 
                                                     th:value="${op.idEquip}" 
                                                     th:text="${op.nome}"
-                                                    th:selected="${op.nome == l.nomeEquip}">
+                                                    th:selected="${op.idEquip == l.idEquip}">
                                             </option>
                                         </select>
-                                    </div>                                                                                          
+                                    </div>                                                                                       
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Data/Hora Retirada:</label>

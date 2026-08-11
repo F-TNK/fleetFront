@@ -106,22 +106,26 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold text-muted">Retirada (Agendada):</label>
-                                    <input type="text" class="form-control bg-light" th:value="${l.dataHoraRetirada}" readonly>
+                                    <input type="text" class="form-control bg-light border-primary" 
+                                           th:value="${#temporals.format(l.dataHoraRetirada, 'dd/MM/yyyy HH:mm')}" readonly> 
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold text-muted">Devolução (Agendada):</label>
-                                    <input type="text" class="form-control bg-light" th:value="${l.dataHoraDevolucao}" readonly>
+                                    <input type="text" class="form-control bg-light border-primary" 
+                                           th:value="${#temporals.format(l.dataHoraDevolucao, 'dd/MM/yyyy HH:mm')}" readonly> 
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold text-primary">Retirada (Real):</label>
-                                    <input type="text" class="form-control bg-light border-primary" th:value="${l.dataHoraRetiradaReal}" readonly>
+                                    <input type="text" class="form-control bg-light border-primary" 
+                                           th:value="${#temporals.format(l.dataHoraRetiradaReal, 'dd/MM/yyyy HH:mm')}" readonly>                                   
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold text-primary">Devolução (Real):</label>
-                                    <input type="text" class="form-control bg-light border-primary" th:value="${l.dataHoraDevolucaoReal}" readonly>
+                                    <input type="text" class="form-control bg-light border-primary" 
+                                           th:value="${#temporals.format(l.dataHoraDevolucaoReal, 'dd/MM/yyyy HH:mm')}" readonly>
                                 </div>
 
                                 <div class="col-md-3">
@@ -155,7 +159,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold text-danger">Observações de Devolução (Problema):</label>
+                                    <label class="form-label fw-semibold text-danger">Observações de Devolução:</label>
                                     <textarea class="form-control bg-light border-danger" rows="3" th:text="${l.observacoesDevolucao}" readonly></textarea>
                                 </div>
                             </div>

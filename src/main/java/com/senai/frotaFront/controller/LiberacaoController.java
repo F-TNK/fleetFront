@@ -47,7 +47,7 @@ public class LiberacaoController {
 
         model.addAttribute("alerta", restService.listAlerta(token));
         model.addAttribute("open", restService.listOpen(token));
-        model.addAttribute("operadores", restService.listUsers(token));
+        model.addAttribute("operadores", restService.listOp(token));
         model.addAttribute("equipamentos", restService.listEquip(token));
         
         model.addAttribute("liberacao", new LiberacaoDTO());
