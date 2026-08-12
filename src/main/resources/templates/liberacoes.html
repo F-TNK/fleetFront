@@ -241,7 +241,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             
             <!---------------------- TABELA OPEN ---------------------->
             <div class="card shadow-sm p-4 mb-4">
-                <h3 class="mb-4 fw-bold" style="color: #0e7490;">Liberações Abertas</h3>
+                <h3 class="mb-4 fw-bold text-primary">Liberações Abertas</h3>
                 
                 <!-- FILTROS -->
                 <div class="row mb-4 g-3 bg-light p-3 rounded border">
@@ -290,7 +290,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                           class="badge bg-success text-light">Em Uso</span>
                                     <!-- dataHoraRetiradaReal == null e dataHoraRetirada no passado -->
                                     <span th:if="${l.dataHoraRetiradaReal == null and !l.dataHoraRetirada.isAfter(#temporals.createNow())}" 
-                                          class="badge bg-warning text-dark">Aguardando</span>
+                                          class="badge bg-warning text-light">Aguardando</span>
                                     <span th:if="${l.dataHoraRetiradaReal == null and l.dataHoraRetirada.isAfter(#temporals.createNow())}" 
                                           class="badge bg-primary text-light">Aberta</span>
                                 </td>

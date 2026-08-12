@@ -16,7 +16,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <!---------------------- TABELA USER ---------------------->
             <div class="card shadow-sm p-4 mb-4">
 <!--                <h3 class="mb-4 text-dark fw-bold">Funcionários</h3>-->
-                <h3 class="mb-4 fw-bold" style="color: #0e7490;">Funcionários</h3>
+                <h3 class="mb-4 fw-bold text-primary">Funcionários</h3>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-hover align-middle mb-0">
@@ -48,7 +48,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 </td>
                                     
                                 <td>
-                                    <span class="badge"
+                                    <span class="badge text-white" 
                                           th:classappend="${'administrador'.equalsIgnoreCase(u.cargo) 
                                           ? 'bg-success' : 'bg-primary'}"
                                           th:text="${u.cargo}">OPERADOR</span>
@@ -196,7 +196,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <div class="card shadow-sm p-4">
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="mb-4 fw-bold" style="color: #0e7490;">Equipamentos</h3>
+                    <h3 class="mb-4 fw-bold text-primary">Equipamentos</h3>
                     <button class="btn btn-success" type="button"
                             data-bs-toggle="collapse" data-bs-target="#formCadastroEquip"
                             aria-expanded="false" aria-controls="formCadastroEquip">

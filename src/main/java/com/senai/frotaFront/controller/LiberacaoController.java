@@ -82,12 +82,21 @@ public class LiberacaoController {
             return "redirect:/login";
         }
         
+//        try {
+//            restService.addLiberacao(liberacao, token);
+//            redirect.addFlashAttribute("sucesso", "Liberação agendada");
+//        } catch (HttpClientErrorException e) {
+//            // Captura ResponseStatusException (erros) do Service(back)
+//            redirect.addFlashAttribute("erro", e.getResponseBodyAsString());
+//        } catch (Exception e) {
+//            redirect.addFlashAttribute("erro", "Falha no agendamento. Tente novamente.");
+//        }
         try {
             restService.addLiberacao(liberacao, token);
             redirect.addFlashAttribute("sucesso", "Liberação agendada");
-        } catch (HttpClientErrorException e) {
+        } catch (ResponseStatusException e) {
             // Captura ResponseStatusException (erros) do Service(back)
-            redirect.addFlashAttribute("erro", e.getResponseBodyAsString());
+            redirect.addFlashAttribute("erro", e.getReason());
         } catch (Exception e) {
             redirect.addFlashAttribute("erro", "Falha no agendamento. Tente novamente.");
         }
@@ -96,13 +105,22 @@ public class LiberacaoController {
     }
 
     @PostMapping("/admin/liberacao/edit")
-    public String editLiberacao(@ModelAttribute LiberacaoDTO liberacao, HttpSession session) {
+    public String editLiberacao(@ModelAttribute LiberacaoDTO liberacao, HttpSession session, RedirectAttributes redirect) {
         String token = (String) session.getAttribute("token");
         String role = (String) session.getAttribute("role");
         
         // Validacao admin
         if (token != null && "administrador".equalsIgnoreCase(role)) {
             restService.editLiberacao(liberacao, token);
+//            try {
+//                restService.editLiberacao(liberacao, token);
+//                redirect.addFlashAttribute("sucesso", "Liberação agendada");
+//            } catch (ResponseStatusException e) {
+//                // Captura ResponseStatusException (erros) do Service(back)
+//                redirect.addFlashAttribute("erro", e.getReason());
+//            } catch (Exception e) {
+//                redirect.addFlashAttribute("erro", "Falha no agendamento. Tente novamente.");
+//            }
         }
 
         return "redirect:/liberacoes";
@@ -133,10 +151,10 @@ public class LiberacaoController {
                 restService.resolve(id, token);
                 redirectAttributes.addFlashAttribute("sucesso", "Ocorrência concluída com sucesso!");
 
-            } catch (HttpClientErrorException.BadRequest e) {
-                // Captura ResponseStatusException (erros) do Service(back)
-                redirectAttributes.addFlashAttribute("erro", "Equipamento não pode ser liberado. Horímetro muito alto");
-
+//            } catch (HttpClientErrorException.BadRequest e) {
+//                // Captura ResponseStatusException (erros) do Service(back)
+//                redirectAttributes.addFlashAttribute("erro", "Equipamento não pode ser liberado. Horímetro muito alto");
+//
             } catch (Exception e) {
                 redirectAttributes.addFlashAttribute("erro", "Falha no processo. Tente novamente");
             }
@@ -181,9 +199,9 @@ public class LiberacaoController {
         try {
             restService.pickUp(liberacao, token);
             redirect.addFlashAttribute("sucesso", "Equipamento retirado");
-        } catch (HttpClientErrorException e) {
+        } catch (ResponseStatusException e) {
             // Captura ResponseStatusException (erros) do Service(back)
-            redirect.addFlashAttribute("erro", e.getResponseBodyAsString());
+            redirect.addFlashAttribute("erro", e.getReason());
         } catch (Exception e) {
             redirect.addFlashAttribute("erro", "Tente novamente.");
         }
@@ -205,9 +223,9 @@ public class LiberacaoController {
         try {
             restService.close(liberacao, token);
             redirect.addFlashAttribute("sucesso", "Devolução realizada com sucesso!");
-        } catch (HttpClientErrorException e) {
+        } catch (ResponseStatusException e) {
             // Captura ResponseStatusException (erros) do Service(back)
-            redirect.addFlashAttribute("erro", e.getResponseBodyAsString());
+            redirect.addFlashAttribute("erro", e.getReason());
         } catch (Exception e) {
             redirect.addFlashAttribute("erro", "Falha na devolução. Tente novamente.");
         }
