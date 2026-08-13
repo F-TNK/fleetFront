@@ -11,11 +11,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </head>
     <body>
 
-        <main class="py-4">
+        <main class="py-4 ms-5" style="width: 85%; margin-right: 100px;">
 
             <!---------------------- MINHAS LIBERACOES ---------------------->
-            <div class="card shadow-sm p-4 mb-4 border-primary">
-                <h3 class="mb-4 fw-bold" style="color: #0e7490;">Minhas Liberações</h3>
+            <div class="card shadow-sm p-4 mb-4">
+                <h3 class="mb-4 fw-bold text-primary">Minhas Liberações</h3>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-hover align-middle mb-0">
@@ -40,7 +40,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                           class="badge bg-success text-light">Em Uso</span>
                                     <!-- dataHoraRetiradaReal == null e dataHoraRetirada no passado -->
                                     <span th:if="${l.dataHoraRetiradaReal == null and !l.dataHoraRetirada.isAfter(#temporals.createNow())}" 
-                                          class="badge bg-warning text-dark">Aguardando</span>
+                                          class="badge bg-warning text-light">Aguardando</span>
                                     <span th:if="${l.dataHoraRetiradaReal == null and l.dataHoraRetirada.isAfter(#temporals.createNow())}" 
                                           class="badge bg-primary text-light">Aberta</span>
                                 </td>
@@ -122,7 +122,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             </div>
                             
                             
-                            <!-- PARTE DEVOLUCAO !! depois de dataHoraRetiradaReal -->
+                            <!-- PARTE DEVOLUCAO !! depois de dataHoraRetiradaReal -->                            
                             <div class="col-12 mt-4" th:if="${l.dataHoraRetiradaReal != null}">
                                 <form th:action="@{/op/liberacao/close}" method="post" th:id="'formClose' + ${l.id}">
                                     <!-- Hidden fields pra importar valores necessarios -->
@@ -131,11 +131,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     <input type="hidden" name="horimetroInicial" th:value="${l.horimetroInicial}">
                                     <input type="hidden" name="combustivelInicial" th:value="${l.combustivelInicial}">
 
-                                    <div class="row g-3 p-3 bg-white border border-success rounded shadow-sm">
+                                    <div class="row g-3 p-3 bg-light border border-success rounded shadow-sm">
                                         <h6 class="fw-bold text-success mb-0 border-bottom pb-2">
-                                            <i class="bi bi-arrow-return-left"></i> Registrar Devolução
+                                            Registrar Devolução
                                         </h6>
-                                        
+
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">Horímetro Final <span class="text-danger">*</span></label>
                                             <input type="number" step="0.1" class="form-control" name="horimetroFinal" required>
@@ -145,13 +145,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <label class="form-label fw-semibold">Combustível Final (%) <span class="text-danger">*</span></label>
                                             <input type="number" step="5" class="form-control" name="combustivelFinal" required min="0" max="100">
                                         </div>
-
+                                        
                                         <!-- toggle alerta  --> 
                                         <div class="col-12 mt-3">
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" name="alerta" th:id="'alerta' + ${l.id}" value="true">
-                                                <label class="form-check-label text-danger fw-bold" th:for="'alerta' + ${l.id}">
-                                                    ⚠️ Reportar Problema no Equipamento
+                                                <label class="form-check-label text-danger fw-bold d-inline-flex align-items-center gap-1" th:for="'alerta' + ${l.id}">
+                                                    <i class="ti ti-alert-triangle fs-2"></i> Reportar Problema no Equipamento
+                                                        <!-- d-inline-flex align-items-center gap-1: Centraliza a figura com o texto -->
                                                 </label>
                                             </div>
                                         </div>

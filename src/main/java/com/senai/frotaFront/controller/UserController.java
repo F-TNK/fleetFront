@@ -15,6 +15,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  *
@@ -108,7 +112,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String sendRegister(@ModelAttribute UserDTO user, Model model) {
+    public String sendRegister(@ModelAttribute UserDTO user, Model model, RedirectAttributes redirect) {
         
         // Gera erro para o front-end, retornando na mesma pagina com mensagem 
         // Evita ir para o Service para verificacao para voltar aqui e ser redirecionado
@@ -117,8 +121,16 @@ public class UserController {
             model.addAttribute("user", user);
             return "register";
         }
+        try {
+                restService.register(user);
+                redirect.addFlashAttribute("sucesso", "Usuário Cadastrado");
+            } catch (HttpStatusCodeException e) {
+                redirect.addFlashAttribute("erro", mensagemErro(e));
+            } catch (Exception e) {
+                redirect.addFlashAttribute("erro", "Falha no registro. Tente novamente.");
+            }
         
-        restService.register(user);
+//        restService.register(user);
         return "redirect:/login";
     }
 
@@ -170,5 +182,30 @@ public class UserController {
         }
         
         return "op";
+    }
+    
+    // ------------------- EXTRACAO MENSAGEM JSON -------------------
+    
+    private String mensagemErro(HttpStatusCodeException m) {
+        try {
+            String json = m.getResponseBodyAsString();
+            if (json != null && !json.trim().isEmpty()) {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode jsonNode = mapper.readTree(json);
+
+                if (jsonNode.has("message") && !jsonNode.get("message").asText().isEmpty()) {
+                    return jsonNode.get("message").asText();
+                }
+                if (jsonNode.has("reason") && !jsonNode.get("reason").asText().isEmpty()) {
+                    return jsonNode.get("reason").asText();
+                }
+                if (jsonNode.has("detail") && !jsonNode.get("detail").asText().isEmpty()) {
+                    return jsonNode.get("detail").asText();
+                }
+            }
+        } catch (Exception e) {
+            
+        }
+        return "Ocorreu um erro ao processar a requisição (" + m.getStatusCode().value() + ").";
     }
 }

@@ -8,40 +8,151 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <meta charset="UTF-8">
         <title>Fleet - Gestão de Frota</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        
+        <!-- Tabler template CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css">
+        <!-- Tabler sticker/icones -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+        
+        <style>
+            /* Definindo cores globais */
+            :root {
+                --tblr-primary: #0c8bad;
+                --tblr-primary-rgb: 12, 139, 173;
+                
+                --tblr-secondary: #6c757d;
+                --tblr-secondary-rgb: 108, 117, 125;
+                
+                --tblr-warning: #FF8C00;
+                --tblr-warning-rgb: 255, 140, 0;
+                
+                --tblr-danger: #FF0000;
+                --tblr-danger-rgb: 255, 0   , 0;
+
+                /* Fundo da Página */
+                --tblr-body-bg: #f8fafc
+;            }
+            
+            /* 1. DARK MODE Altera a cor primária globalmente  */
+            [data-bs-theme="dark"] {
+                --tblr-primary: #38bdf8; 
+                --tblr-primary-rgb: 56, 189, 248;
+                
+                --tblr-secondary: #94a3b8; 
+                --tblr-secondary-rgb: 148, 163, 184;
+            }
+
+            a:not(.btn) { 
+                color: var(--tblr-primary); 
+            }
+
+            /* sidebar colapsavel */
+            @media (min-width: 800px) {
+                .navbar-vertical {
+                    width: 4.5rem !important;
+                    transition: width 0.25s ease-in-out;
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
+
+                .navbar-vertical .nav-link-title, 
+                .navbar-vertical .navbar-brand {
+                    opacity: 0;
+                    transition: opacity 0.2s ease;
+                }
+
+                .navbar-vertical:hover {
+                    width: 13rem !important;
+                }
+
+                .navbar-vertical:hover .nav-link-title,
+                .navbar-vertical:hover .navbar-brand {
+                    opacity: 1;
+                }
+            }
+
+            /* Sombras */
+            .card, .navbar, .modal-content {
+                box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.08) !important;
+            } 
+            
+            /* Sombra colorida discreta no Dark Mode */
+            [data-bs-theme="dark"] .card,
+            [data-bs-theme="dark"] .navbar,
+            [data-bs-theme="dark"] .modal-content {
+                /* 0px deslocamento X, 4px deslocamento Y, 20px dispersão, azul original com 20% de opacidade */
+                box-shadow: 0 4px 20px rgba(14, 116, 144, 0.2) !important;
+            }
+
+            /* Opcional: Efeito hover sutil nos cards durante o Dark Mode */
+            [data-bs-theme="dark"] .card:hover {
+                box-shadow: 0 6px 24px rgba(14, 116, 144, 0.35) !important;
+                transition: box-shadow 0.2s ease-in-out;
+            }
+            
+            [data-bs-theme="dark"] .form-select,
+            [data-bs-theme="dark"] .form-control,
+            [data-bs-theme="dark"] select option {
+                background-color: #1e293b !important;
+                color: #f8fafc !important;
+                border-color: #334155 !important;
+            }
+
+            [data-bs-theme="dark"] select option:checked,
+            [data-bs-theme="dark"] select option:hover {
+                background-color: var(--tblr-primary) !important;
+                color: #ffffff !important;
+            }
+
+            /* Força caixas com bg-light a acompanharem o modo escuro */
+            [data-bs-theme="dark"] .bg-light {
+                background-color: #0f172a !important;
+                color: #f8fafc !important;
+                border-color: #334155 !important;
+            }
+            
+        </style>
     </head>
     
     
-    <body class="bg-light">
+    <body class="page">
         
         <!---------------------- NAVBAR ---------------------->
-        <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background-color: #0e7490;" data-bs-theme="dark">
-            <div class="container-fluid">
+        <aside class="navbar navbar-vertical navbar-expand-lg navbar-dark" style="background-color: #0e7490;">
+            <div class="container-fluid d-flex flex-column h-100 py-3">
 
-                <span class="navbar-brand mb-0 h1 fs-4 fw-bold text-uppercase px-2" 
-                      style="letter-spacing: 3px;">FLEET</span>
-                <div class="collapse navbar-collapse" id="navbarFleet">
-                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                        <li class="nav-item px-2">
-                            <a class="nav-link text-white text-uppercase fw-semibold" 
-                               aria-current="page" th:href="@{/op}">Liberações</a>
+                <!-- Logo e Dark Mode -->
+                <div class="d-flex align-items-center justify-content-between w-100 px-2 mb-3">
+                    <a class="navbar-brand text-uppercase fw-bold text-white mb-0" th:href="@{/op}">FLEET</a>
+                    <button type="button" onclick="toggleDarkMode()" class="btn btn-icon btn-ghost-light" title="Alternar Tema">
+                        <i class="ti ti-moon"></i>
+                    </button>
+                </div>
+                
+                <div class="collapse navbar-collapse show w-100 align-items-start" id="sidebar-menu">
+                    <ul class="navbar-nav w-100 px-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-white text-uppercase fw-semibold" th:href="@{/op}">
+                                <span class="nav-link-title">Liberações</span>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <span class="nav-link text-white display-1 fw-semibold" 
-                               aria-current="page" th:href="@{/}">|</span>
-                        </li>
-                        <li class="nav-item px-2">
-                            <a class="nav-link text-white text-uppercase fw-semibold" 
-                               aria-current="page" th:href="@{/profile}">Perfil</a>
+                            <a class="nav-link text-white text-uppercase fw-semibold" th:href="@{/profile}">
+                                <span class="nav-link-title">Perfil</span>
+                            </a>
                         </li>
                     </ul>
-                    <div class="d-flex gap-2">
-                        <a th:href="@{/logout}" class="btn btn-outline-light">Sair</a>
+                    
+                    <!-- rodape -->
+                    <<div class="mt-auto w-100 px-2 pt-3">
+                        <a th:href="@{/logout}" class="btn btn-outline-light w-100 d-flex align-items-center justify-content-center gap-2">
+                            <span>Sair</span>
+                        </a>
                     </div>
                     
                 </div>
             </div>
-        </nav>
+        </aside>
         
         
         <div class="container">
@@ -60,6 +171,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <div th:replace="${conteudo}"></div>
         </div>
         
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Tabler JS -->
+        <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js"></script>        
+        
+        <!-- script DARK MODE -->
+        <script>
+            function toggleDarkMode() {
+                const currentTheme = document.body.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.body.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('fleet-theme', newTheme);
+            }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const savedTheme = localStorage.getItem('fleet-theme') || 'light';
+                document.body.setAttribute('data-bs-theme', savedTheme);
+            });
+        </script>
     </body>
 </html>
