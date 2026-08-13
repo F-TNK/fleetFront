@@ -11,13 +11,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </head>
     
     <body>
-        <main class="d-flex justify-content-center align-items-center w-100" style="min-height: 80vh;">
-            <!-- style="max-width: 800px - CSS para limitar o tamanho do card -->
-            <!-- overflow: hidden - Esconde as bordas do card para deixar mais arredondado dos 40px -->
-            <div class="card shadow border-0 w-100" style="max-width: 600px; border-radius: 40px; overflow: hidden;">
+        <main class="w-100" style="min-height: 80vh;">
+            
+            <div class="card shadow border-0 w-100" 
+                 style="max-width: 650px; border-radius: 40px; overflow: hidden; 
+                 position: fixed; top: 45%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
+                <!-- centralizacao horizontal ignorando a navbar -->
                 
                 <!-- HEADER -->
-                <div class="card-header text-white text-center py-3" style="background-color: #0e7490; border-radius: 40px 40px 0 0;">
+                <div class="card-header text-white justify-content-center py-3" style="background-color: #0e7490;">
                     <h2 class="mb-0">CRIAR CONTA</h2>                           <!-- cores: #0e7490 e #334155 -->
                 </div>
                 <div class="card-body p-4">

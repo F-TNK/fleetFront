@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  *
@@ -94,9 +97,8 @@ public class LiberacaoController {
         try {
             restService.addLiberacao(liberacao, token);
             redirect.addFlashAttribute("sucesso", "Liberação agendada");
-        } catch (ResponseStatusException e) {
-            // Captura ResponseStatusException (erros) do Service(back)
-            redirect.addFlashAttribute("erro", e.getReason());
+        } catch (HttpStatusCodeException e) {
+            redirect.addFlashAttribute("erro", mensagemErro(e));
         } catch (Exception e) {
             redirect.addFlashAttribute("erro", "Falha no agendamento. Tente novamente.");
         }
@@ -111,16 +113,15 @@ public class LiberacaoController {
         
         // Validacao admin
         if (token != null && "administrador".equalsIgnoreCase(role)) {
-            restService.editLiberacao(liberacao, token);
-//            try {
-//                restService.editLiberacao(liberacao, token);
-//                redirect.addFlashAttribute("sucesso", "Liberação agendada");
-//            } catch (ResponseStatusException e) {
-//                // Captura ResponseStatusException (erros) do Service(back)
-//                redirect.addFlashAttribute("erro", e.getReason());
-//            } catch (Exception e) {
-//                redirect.addFlashAttribute("erro", "Falha no agendamento. Tente novamente.");
-//            }
+//            restService.editLiberacao(liberacao, token);
+            try {
+                restService.editLiberacao(liberacao, token);
+                redirect.addFlashAttribute("sucesso", "Liberação atualizada");
+            } catch (HttpStatusCodeException e) {
+                redirect.addFlashAttribute("erro", mensagemErro(e));
+            } catch (Exception e) {
+                redirect.addFlashAttribute("erro", "Falha no agendamento. Tente novamente.");
+            }
         }
 
         return "redirect:/liberacoes";
@@ -196,12 +197,21 @@ public class LiberacaoController {
             return "redirect:/login";
         }
 
+//        try {
+//            restService.pickUp(liberacao, token);
+//            redirect.addFlashAttribute("sucesso", "Equipamento retirado");
+//        } catch (ResponseStatusException e) {
+//            // Captura ResponseStatusException (erros) do Service(back)
+//            redirect.addFlashAttribute("erro", e.getReason());
+//        } catch (Exception e) {
+//            redirect.addFlashAttribute("erro", "Tente novamente.");
+//        }
+        
         try {
             restService.pickUp(liberacao, token);
             redirect.addFlashAttribute("sucesso", "Equipamento retirado");
-        } catch (ResponseStatusException e) {
-            // Captura ResponseStatusException (erros) do Service(back)
-            redirect.addFlashAttribute("erro", e.getReason());
+        } catch (HttpStatusCodeException e) {
+            redirect.addFlashAttribute("erro", mensagemErro(e));
         } catch (Exception e) {
             redirect.addFlashAttribute("erro", "Tente novamente.");
         }
@@ -220,16 +230,51 @@ public class LiberacaoController {
             return "redirect:/login";
         }
 
+//        try {
+//            restService.close(liberacao, token);
+//            redirect.addFlashAttribute("sucesso", "Devolução realizada com sucesso!");
+//        } catch (ResponseStatusException e) {
+//            // Captura ResponseStatusException (erros) do Service(back)
+//            redirect.addFlashAttribute("erro", e.getReason());
+//        } catch (Exception e) {
+//            redirect.addFlashAttribute("erro", "Falha na devolução. Tente novamente.");
+//        }
+        
         try {
             restService.close(liberacao, token);
             redirect.addFlashAttribute("sucesso", "Devolução realizada com sucesso!");
-        } catch (ResponseStatusException e) {
-            // Captura ResponseStatusException (erros) do Service(back)
-            redirect.addFlashAttribute("erro", e.getReason());
+        } catch (HttpStatusCodeException e) {
+            redirect.addFlashAttribute("erro", mensagemErro(e));
         } catch (Exception e) {
             redirect.addFlashAttribute("erro", "Falha na devolução. Tente novamente.");
         }
 
         return "redirect:/op";
+    }
+    
+    
+    // ------------------- EXTRACAO MENSAGEM JSON -------------------
+    
+    private String mensagemErro(HttpStatusCodeException m) {
+        try {
+            String json = m.getResponseBodyAsString();
+            if (json != null && !json.trim().isEmpty()) {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode jsonNode = mapper.readTree(json);
+
+                if (jsonNode.has("message") && !jsonNode.get("message").asText().isEmpty()) {
+                    return jsonNode.get("message").asText();
+                }
+                if (jsonNode.has("reason") && !jsonNode.get("reason").asText().isEmpty()) {
+                    return jsonNode.get("reason").asText();
+                }
+                if (jsonNode.has("detail") && !jsonNode.get("detail").asText().isEmpty()) {
+                    return jsonNode.get("detail").asText();
+                }
+            }
+        } catch (Exception e) {
+            
+        }
+        return "Ocorreu um erro ao processar a requisição (" + m.getStatusCode().value() + ").";
     }
 }

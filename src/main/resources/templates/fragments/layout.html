@@ -17,25 +17,29 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <style>
             /* Definindo cores globais */
             :root {
-                /* Cor Primária (HEX + RGB) */
-                --tblr-primary: #0e7490;
-                --tblr-primary-rgb: 14, 116, 144;
-
-                /* Cor Danger / Alerta (HEX + RGB para #ffd700) */
-                --tblr-warning: #FFA500;
-                --tblr-warning-rgb: 255, 165, 0;
+                --tblr-primary: #0c8bad;
+                --tblr-primary-rgb: 12, 139, 173;
+                
+                --tblr-secondary: #6c757d;
+                --tblr-secondary-rgb: 108, 117, 125;
+                
+                --tblr-warning: #FF8C00;
+                --tblr-warning-rgb: 255, 140, 0;
                 
                 --tblr-danger: #FF0000;
                 --tblr-danger-rgb: 255, 0   , 0;
 
                 /* Fundo da Página */
-                --tblr-body-bg: #f8fafc;
-            }
+                --tblr-body-bg: #f8fafc
+;            }
             
-            /* 1. AUTOMAÇÃO DO DARK MODE: Altera a cor primária globalmente no tema escuro */
+            /* 1. DARK MODE Altera a cor primária globalmente  */
             [data-bs-theme="dark"] {
-                --tblr-primary: #38bdf8; /* Azul/Ciano claro com alto contraste */
+                --tblr-primary: #38bdf8;
                 --tblr-primary-rgb: 56, 189, 248;
+                
+                --tblr-secondary: #94a3b8;
+                --tblr-secondary-rgb: 148, 163, 184;
             }
 
             a:not(.btn) { 
@@ -43,7 +47,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             }
 
             /* sidebar colapsavel */
-            @media (min-width: 992px) {
+            @media (min-width: 800px) {
                 .navbar-vertical {
                     width: 4.5rem !important;
                     transition: width 0.25s ease-in-out;
@@ -58,7 +62,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 }
 
                 .navbar-vertical:hover {
-                    width: 15rem !important;
+                    width: 13rem !important;
                 }
 
                 .navbar-vertical:hover .nav-link-title,
@@ -69,8 +73,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
             /* Sombras */
             .card, .navbar, .modal-content {
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+                box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.08) !important;
             } 
+            
+            /* Sombra colorida discreta no Dark Mode */
+            [data-bs-theme="dark"] .card,
+            [data-bs-theme="dark"] .navbar,
+            [data-bs-theme="dark"] .modal-content {
+                /* 0px deslocamento X, 4px deslocamento Y, 20px dispersão, azul original com 20% de opacidade */
+                box-shadow: 0 4px 20px rgba(14, 116, 144, 0.2) !important;
+            }
+
+            /* Opcional: Efeito hover sutil nos cards durante o Dark Mode */
+            [data-bs-theme="dark"] .card:hover {
+                box-shadow: 0 6px 24px rgba(14, 116, 144, 0.35) !important;
+                transition: box-shadow 0.2s ease-in-out;
+            }
             
             [data-bs-theme="dark"] .form-select,
             [data-bs-theme="dark"] .form-control,
@@ -92,6 +110,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 color: #f8fafc !important;
                 border-color: #334155 !important;
             }
+            
         </style>
     </head>
     
@@ -103,7 +122,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                 <!-- Logo e Dark Mode -->
                 <div class="d-flex align-items-center justify-content-between w-100 px-2 mb-3">
-                    <a class="navbar-brand text-uppercase fw-bold text-white mb-0" th:href="@{/admin}">FLEET</a>
+                    <span class="navbar-brand text-uppercase fw-bold text-white mb-0" th:href="@{/admin}">FLEET</span>
                     <button type="button" onclick="toggleDarkMode()" class="btn btn-icon btn-ghost-light" title="Alternar Tema">
                         <i class="ti ti-moon"></i>
                     </button>
