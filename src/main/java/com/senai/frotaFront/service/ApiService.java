@@ -247,24 +247,6 @@ public class ApiService {
                 .body(LiberacaoDTO[].class);
         return Arrays.asList(liberacoes);
     }
-    
-//    public List<LiberacaoDTO> listByOp(Long idUser, String token) {;;
-//        LiberacaoDTO[] liberacoes = restClient.get()
-//                .uri("/admin/liberacao/operador/" + idUser)
-//                .header("Authorization", "Bearer " + token)
-//                .retrieve()
-//                .body(LiberacaoDTO[].class);
-//        return Arrays.asList(liberacoes);
-//    }
-//    
-//    public List<LiberacaoDTO> listByEquip(Long idEquip, String token) {
-//        LiberacaoDTO[] liberacoes = restClient.get()
-//                .uri("/admin/liberacao/equipamento/" + idEquip)
-//                .header("Authorization", "Bearer " + token)
-//                .retrieve()
-//                .body(LiberacaoDTO[].class);
-//        return Arrays.asList(liberacoes);
-//    }
 
     public String resolve(Long id, String token) {
         return restClient.put()

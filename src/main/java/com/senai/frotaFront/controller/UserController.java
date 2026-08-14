@@ -137,18 +137,19 @@ public class UserController {
     @GetMapping("/profile")
     public String profile(HttpSession session, Model model) {
         String token = (String) session.getAttribute("token");
-        Long id = (Long) session.getAttribute("id");
+        Object idObj = session.getAttribute("id");
         
         if (token == null) {
             return "redirect:/login";
         }
         
         try {
-            UserDTO u = restService.findUserById(id, token);
-//            u.setConfirmSenha("");
+            Long id = Long.valueOf(idObj.toString());
             
+            UserDTO u = restService.findUserById(id, token);
             model.addAttribute("user", u);
         } catch (Exception e) {
+            e.printStackTrace();
             model.addAttribute("erro", "Erro ao buscar dados do perfil.");
             model.addAttribute("user", new UserDTO());
         }
