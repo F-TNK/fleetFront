@@ -182,7 +182,7 @@ public class UserController {
             model.addAttribute("user", user);
         }
         
-        return "op";
+        return "redirect:/op";
     }
     
     // ------------------- EXTRACAO MENSAGEM JSON -------------------

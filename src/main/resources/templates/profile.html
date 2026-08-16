@@ -64,13 +64,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label fw-semibold">Nova Senha:</label>
-                                    <input type="password" th:field="*{senha}" class="form-control">
+                                    <label class="form-label">Senha:</label>
+                                    <input type="password" 
+                                           th:field="*{senha}" 
+                                           class="form-control" 
+                                           minlength="8" 
+                                           required 
+                                           oninvalid="this.setCustomValidity('A senha deve conter no mínimo 8 caracteres.')"
+                                           oninput="this.setCustomValidity('')">
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">Confirmar Nova Senha:</label>
-                                    <input type="password" th:field="*{confirmSenha}" class="form-control">
+                                    <input type="password" th:field="*{confirmSenha}" class="form-control" required>
                                 </div>
                             </div>
                         </div>
